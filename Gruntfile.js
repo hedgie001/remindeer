@@ -21,7 +21,7 @@ module.exports = function(grunt) {
             style: {
                 expand: true,
                 flatten: true,
-                src: ['src/style.css'],
+                src: ['src/base.css'],
                 dest: 'public/'
             },
             html: {
@@ -36,8 +36,14 @@ module.exports = function(grunt) {
                 separator: ';'
             },
             dist: {
-                src: ['src/*.js', 'src/**/*.js'],
+                src: ['src/*.js', 'src/js/*.js'],
                 dest: 'public/<%= pkg.name %>.js'
+            }
+        },
+        concat_css: {
+            all: {
+                src: ["src/css/*.css", "src/css/themes/*.css"],
+                dest: "public/css/styles.css"
             }
         },
         uglify: {
@@ -59,15 +65,26 @@ module.exports = function(grunt) {
                     unused: true
                 }
             }
+        },
+        watch: {
+            scripts: {
+                files: ['src/*.js', 'src/js/*.js', 'src/*.html','src/css/*.css', 'src/css/themes/*.css'],
+                tasks: ['copy', 'jshint', 'concat', 'concat_css'],
+                options: {
+                    spawn: false,
+                },
+            },
         }
     });
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-concat-css');
+    grunt.loadNpmTasks('grunt-contrib-watch');
 
     grunt.registerTask('test', ['jshint']);
 
-    grunt.registerTask('default', ['copy', 'jshint', 'concat']);
+    grunt.registerTask('default', ['copy', 'jshint', 'concat', 'concat_css']);
 
 };

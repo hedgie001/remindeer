@@ -1,1 +1,1 @@
-alert("Hello World");
+var mainController = new MainController();
