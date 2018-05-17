@@ -1,0 +1,37 @@
+.list{
+    margin-top: 28px;
+    display: flex;
+    flex-direction: column;
+}
+.list__item{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 28px;
+}
+.list__item__checkbox{
+    width: 48px;
+    text-align: center;
+}
+.list__item__title{
+    flex: 1;
+}
+.list__item__title__date, .list__item__title__label{
+    margin-top: 0;
+    margin-bottom: 4px;
+}
+.list__item__importance{
+    text-align: right;
+    width: 120px;
+}
+.list__item__description{
+    width: calc(100% - 48px);
+    margin-left: 48px;
+}
+.list__item__edit{
+    width: 100%;
+    text-align: right;
+    border-bottom: 1px solid transparent;
+    padding-bottom: 20px;
+}

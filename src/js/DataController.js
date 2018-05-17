@@ -1,4 +1,4 @@
-var mainController = new MainController();;/**
+/**
  * Created by Hedgehog on 17.05.18.
  */
 function DataController(){
@@ -30,20 +30,4 @@ function DataController(){
     this.getData = function(){
         return this.mockUpData;
     };
-};/**
- * Created by Hedgehog on 16.05.18.
- */
-function MainController(){
-    var data = new DataController().getData();
-    console.log(data);
-};/**
- * Created by Hedgehog on 16.05.18.
- */
-function Note(){
-    console.log("Note Object");
-};/**
- * Created by Hedgehog on 16.05.18.
- */
-function ThemeController(){
-    console.log("Theme Controller");
 }

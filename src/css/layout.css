@@ -1,7 +1,7 @@
+
 .grid-container {
     display: grid;
     grid-template-columns: auto 320px auto;
-    background-color: #2196F3;
 }
 @media only screen and (min-width : 480px) {
     .grid-container {
@@ -15,15 +15,25 @@
 }
 @media only screen and (min-width : 992px) {
     .grid-container {
-        grid-template-columns: auto 992px auto;
-    }
-}
-@media only screen and (min-width : 1200px) {
-    .grid-container {
-        grid-template-columns: auto 1200px auto;
+        grid-template-columns: auto 730px auto;
     }
 }
 .content {
-    background-color: rgba(255, 255, 255, 0.8);
-    padding: 20px;
+    margin-top: 56px;
+    padding-top: 56px;
+}
+nav {
+    position: absolute;
+    width: 100%;
+    height: 56px;
+    top: 0;
+    display: flex;
+    align-items: center;
+
+    -webkit-box-shadow: 0px 2px 3px 0px rgba(0,0,0,0.4);
+    -moz-box-shadow: 0px 2px 3px 0px rgba(0,0,0,0.4);
+    box-shadow: 0px 2px 3px 0px rgba(0,0,0,0.4);
+}
+nav .title {
+    flex: 1;
 }
