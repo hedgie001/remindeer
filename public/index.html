@@ -33,24 +33,32 @@
                 </div>
             </div>
             <div class="list">
-                <div class="list__item">
-                    <div class="list__item__checkbox">
-                        <input type="checkbox" checked>
+                <script id="list__item__template" type="x-tmpl-mustache">
+                    <div class="list__item" id="list__item__id__{{id}}">
+                        <div class="list__item__checkbox">
+                            <input type="checkbox" {{#active}}checked{{/active}}>
+                        </div>
+                        <div class="list__item__title">
+                            <h3 class="list__item__title__date">{{date}}</h3>
+                            <h2 class="list__item__title__label">{{title}}</h2>
+                        </div>
+                        <div class="list__item__importance">{{importance}}</div>
+                        <div class="list__item__description">
+                            <p>{{description}}</p>
+                        </div>
+                        <div class="list__item__edit list__item__edit--default">edit</div>
                     </div>
-                    <div class="list__item__title">
-                        <h3 class="list__item__title__date">Date</h3>
-                        <h2 class="list__item__title__label">Title</h2>
-                    </div>
-                    <div class="list__item__importance">•••••</div>
-                    <div class="list__item__description">
-                        <p>description</p>
-                    </div>
-                    <div class="list__item__edit list__item__edit--default">edit</div>
-                </div>
+                </script>
+                <script id="list__nodata__template" type="x-tmpl-mustache">
+                    Keine Daten
+                </script>
+                <div id="list__container"></div>
             </div>
         </main>
         <aside></aside>
     </div>
+    <script type="text/javascript" src="libs/mustache.min.js"></script>
+
     <script type="text/javascript" src="remindeer.js"></script>
 </body>
 </html>

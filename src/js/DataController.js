@@ -6,6 +6,7 @@ function DataController(){
         "api": "1.0.0",
         "empty" : false,
         "notes": [{
+            "id": 1,
             "active": true,
             "title" : "Item 1",
             "date": 1526548760024,
@@ -13,6 +14,7 @@ function DataController(){
             "importance": 3
         },
         {
+            "id": 2,
             "active": true,
             "title" : "Item 2",
             "date": 1526548760024,
@@ -20,8 +22,9 @@ function DataController(){
             "importance": 4
         },
         {
-            "active": true,
-            "title" : "Item 3",
+            "id": 3,
+            "active": false,
+            "title" : "Item 33",
             "date": 1526548760024,
             "description": "Text 4",
             "importance": 5

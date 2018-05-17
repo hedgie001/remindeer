@@ -6,6 +6,7 @@ function DataController(){
         "api": "1.0.0",
         "empty" : false,
         "notes": [{
+            "id": 1,
             "active": true,
             "title" : "Item 1",
             "date": 1526548760024,
@@ -13,6 +14,7 @@ function DataController(){
             "importance": 3
         },
         {
+            "id": 2,
             "active": true,
             "title" : "Item 2",
             "date": 1526548760024,
@@ -20,8 +22,9 @@ function DataController(){
             "importance": 4
         },
         {
-            "active": true,
-            "title" : "Item 3",
+            "id": 3,
+            "active": false,
+            "title" : "Item 33",
             "date": 1526548760024,
             "description": "Text 4",
             "importance": 5
@@ -34,8 +37,27 @@ function DataController(){
  * Created by Hedgehog on 16.05.18.
  */
 function MainController(){
-    var data = new DataController().getData();
-    console.log(data);
+
+    this.data = new DataController().getData();
+
+    this.populateData = function(){
+        var output = "";
+
+        if(!this.data.empty){
+            let template = document.getElementById("list__item__template").innerHTML;
+            Mustache.parse(template);
+
+            this.data.notes.forEach(function(elem, index){
+                output += Mustache.render(template, elem);
+            });
+        } else {
+            output = Mustache.render(document.getElementById("list__nodata__template").innerHTML);
+        }
+
+        document.getElementById('list__container').innerHTML = output;
+
+    };
+    this.populateData();
 };/**
  * Created by Hedgehog on 16.05.18.
  */

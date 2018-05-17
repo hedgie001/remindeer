@@ -29,6 +29,12 @@ module.exports = function(grunt) {
                 flatten: true,
                 src: ['src/*.html'],
                 dest: 'public/'
+            },
+            mustache: {
+                expand: true,
+                flatten: true,
+                src: ['node_modules/mustache/mustache.min.js'],
+                dest: 'public/libs/'
             }
         },
         concat: {
@@ -63,7 +69,8 @@ module.exports = function(grunt) {
                     module: true,
                     document: true,
                     unused: true
-                }
+                },
+                esversion: 6
             }
         },
         watch: {
