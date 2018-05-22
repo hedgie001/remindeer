@@ -1,36 +1,67 @@
 /**
  * Created by Hedgehog on 17.05.18.
  */
-function DataController(){
-    this.mockUpData = {
-        "api": "1.0.0",
-        "empty" : false,
-        "notes": [{
-            "id": 1,
-            "active": true,
-            "title" : "Item 1",
-            "date": 1526548760024,
-            "description": "Text 1",
-            "importance": 3
-        },
-        {
-            "id": 2,
-            "active": true,
-            "title" : "Item 2",
-            "date": 1526548760024,
-            "description": "Text 2",
-            "importance": 4
-        },
-        {
-            "id": 3,
-            "active": false,
-            "title" : "Item 33",
-            "date": 1526548760024,
-            "description": "Text 4",
-            "importance": 5
-        }]
+function DataController(mainController){
+    this.localStorageKey = "remindeer";
+    this.notes = [];
+
+    this.getNotes = function(sort = null){
+        //get data
+        let data = this.getLocalData();
+
+        //Check API Version, etc...
+
+        // sort
+        switch(sort) {
+            case "due": //by due
+                data.notes.sort(((a,b) => a.date - b.date));
+                break;
+            case "created": //by created
+                data.notes.sort(((a,b) => b.created - a.created));
+                break;
+            case "importance": //by importance
+                data.notes.sort(((a,b) => b.importance - a.importance));
+                break;
+            default:
+
+        }
+        this.notes = data.notes;
+        return this.notes;
     };
-    this.getData = function(){
-        return this.mockUpData;
+
+    this.getLocalData = function(){
+        let data = localStorage.getItem(this.localStorageKey);
+        if(data == null){
+            data = {
+                "api": "1.0.0",
+                "empty" : true,
+                "notes": []
+            };
+        } else {
+            data  = JSON.parse(data);
+        }
+        return data;
+    };
+    this.saveLocalNote = function(note){
+        console.log(note);
+        let data = this.getLocalData();
+        if(note.id){
+            //Update
+            console.log("CHECK FOR UPDATE", note.id);
+            data.notes.forEach(function(elem, index){
+                if(elem.id == note.id){
+                    console.log("Update found", note);
+                    data.notes[index] = note;
+                    console.log("Update found 2", data);
+                }
+            });
+        } else {
+            //Create
+            note.id = data.notes.length+1;
+            data.notes.push(note);
+        }
+        data.empty = false;
+        localStorage.setItem(this.localStorageKey, JSON.stringify(data));
+        return data;
     };
 }

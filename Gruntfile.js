@@ -35,6 +35,12 @@ module.exports = function(grunt) {
                 flatten: true,
                 src: ['node_modules/mustache/mustache.min.js'],
                 dest: 'public/libs/'
+            },
+            moment: {
+                expand: true,
+                flatten: true,
+                src: ['node_modules/moment/min/moment-with-locales.min.js'],
+                dest: 'public/libs/'
             }
         },
         concat: {
@@ -81,7 +87,18 @@ module.exports = function(grunt) {
                     spawn: false,
                 },
             },
+        },
+        connect: {
+            server: {
+                keepalive: true,
+                options: {
+                    port: 1337,
+                    base: 'public/',
+                    keepalve: true
+                }
+            }
         }
+
     });
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -89,9 +106,10 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-concat-css');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-contrib-connect');
 
     grunt.registerTask('test', ['jshint']);
 
-    grunt.registerTask('default', ['copy', 'jshint', 'concat', 'concat_css']);
+    grunt.registerTask('default', ['copy', 'jshint', 'concat', 'concat_css'], 'connect:server:keepalive');
 
 };

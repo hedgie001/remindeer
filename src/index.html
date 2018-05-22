@@ -18,47 +18,80 @@
     <div class="grid-container">
         <aside></aside>
         <main class="content">
-            <div class="sort">
-                <div class="sort__formgroup">
-                    <input class="sort__formgroup__radio" type="radio" id="sortDue" name="sort" value="due" checked>
-                    <label class="sort__formgroup__label sort__formgroup__label--default" for="sortDue">Due</label>
+            <div id="list-wrapper">
+                <div class="sort">
+                    <div class="sort__formgroup">
+                        <input class="sort__formgroup__radio" type="radio" id="sort-due" name="sort" value="due" checked>
+                        <label class="sort__formgroup__label sort__formgroup__label--default" for="sort-due">Due</label>
+                    </div>
+                    <div class="sort__formgroup">
+                        <input class="sort__formgroup__radio" type="radio" id="sort-created" name="sort" value="created">
+                        <label class="sort__formgroup__label sort__formgroup__label--default" for="sort-created">Created</label>
+                    </div>
+                    <div class="sort__formgroup">
+                        <input class="sort__formgroup__radio" type="radio" id="sort-importance" name="sort" value="importance">
+                        <label class="sort__formgroup__label sort__formgroup__label--default" for="sort-importance">Importance</label>
+                    </div>
                 </div>
-                <div class="sort__formgroup">
-                    <input class="sort__formgroup__radio" type="radio" id="sortCreated" name="sort" value="created">
-                    <label class="sort__formgroup__label sort__formgroup__label--default" for="sortCreated">Created</label>
-                </div>
-                <div class="sort__formgroup">
-                    <input class="sort__formgroup__radio" type="radio" id="sortImportance" name="sort" value="importance">
-                    <label class="sort__formgroup__label sort__formgroup__label--default" for="sortImportance">Importance</label>
+                <div class="list">
+                    <script id="list__item__template" type="x-tmpl-mustache">
+                        <div class="list__item" id="list__item__id__{{id}}">
+                            <div class="list__item__checkbox">
+                                <input type="checkbox" {{#active}}checked{{/active}}>
+                            </div>
+                            <div class="list__item__title">
+                                <h3 class="list__item__title__date">{{dateFormatted}}</h3>
+                                <h2 class="list__item__title__label">{{title}}</h2>
+                            </div>
+                            <div class="list__item__importance">{{importance}}</div>
+                            <div class="list__item__description">
+                                <p>{{description}}</p>
+                            </div>
+                            <div class="list__item__edit list__item__edit--default"><button onclick="mainController.editor.show(true, '{{id}}')">edit</button></div>
+                        </div>
+                    </script>
+                    <script id="list__nodata__template" type="x-tmpl-mustache">
+                        Keine Daten
+                    </script>
+                    <script id="list__loading__template" type="x-tmpl-mustache">
+                        Laden...
+                    </script>
+                    <div id="list__container"></div>
+                    <button id="create" class="list__fab" onclick="mainController.editor.show(true)">+</button>
                 </div>
             </div>
-            <div class="list">
-                <script id="list__item__template" type="x-tmpl-mustache">
-                    <div class="list__item" id="list__item__id__{{id}}">
-                        <div class="list__item__checkbox">
-                            <input type="checkbox" {{#active}}checked{{/active}}>
-                        </div>
-                        <div class="list__item__title">
-                            <h3 class="list__item__title__date">{{date}}</h3>
-                            <h2 class="list__item__title__label">{{title}}</h2>
-                        </div>
-                        <div class="list__item__importance">{{importance}}</div>
-                        <div class="list__item__description">
-                            <p>{{description}}</p>
-                        </div>
-                        <div class="list__item__edit list__item__edit--default">edit</div>
+            <div id="editor-wrapper">
+                <div class="editor">
+                    <div class="editor__title">
+                        <h1>Reminder</h1>
                     </div>
-                </script>
-                <script id="list__nodata__template" type="x-tmpl-mustache">
-                    Keine Daten
-                </script>
-                <div id="list__container"></div>
+                    <form id="newNote" action="" name="newNote"  onsubmit="return false">
+                        <div class="editor__formgroup">
+                            <label>Title</label>
+                            <input type="text" name="title">
+                        </div>
+                        <div class="editor__formgroup">
+                            <label>Description</label>
+                            <textarea name="description"></textarea>
+                        </div>
+                        <div class="editor__formgroup">
+                            <label>Importance</label>
+                            <input type="number" name="importance"/>
+                        </div>
+                        <div class="editor__formgroup">
+                            <label>Date</label>
+                            <input type="date" name="date">
+                        </div>
+                        <button type="button" onclick="mainController.editor.show(false)">abbrechen</button>
+                        <button type="submit" name="save" onclick="mainController.editor.submit()"/>Speichern</button>
+                    </form>
+                </div>
             </div>
         </main>
         <aside></aside>
     </div>
+    <script type="text/javascript" src="libs/moment-with-locales.min.js"></script>
     <script type="text/javascript" src="libs/mustache.min.js"></script>
-
     <script type="text/javascript" src="remindeer.js"></script>
 </body>
 </html>

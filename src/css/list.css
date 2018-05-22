@@ -21,6 +21,9 @@
     margin-top: 0;
     margin-bottom: 4px;
 }
+.list__item__title__date{
+
+}
 .list__item__importance{
     text-align: right;
     width: 120px;
