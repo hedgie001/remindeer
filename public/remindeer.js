@@ -8,7 +8,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
 document.getElementById('list-wrapper').onchange = function(e) {
     //Watching for cahnges in sort list
     if(e.target.tagName.toLowerCase() === 'input' && e.target.type === 'radio') {
-        mainController.init(e.target.value);
+        mainController.currentSort = e.target.value;
+        mainController.init();
     }
 };
 
@@ -27,9 +28,9 @@ function DataController(mainController){
     this.localStorageKey = "remindeer";
     this.notes = [];
 
-    this.getNotes = function(sort = null){
+    this.getNotes = function(sort = null, showActive = false){
         //get data
-        let data = this.getLocalData();
+        let data = this.getLocalData(showActive);
 
         //Check API Version, etc...
 
@@ -45,13 +46,12 @@ function DataController(mainController){
                 data.notes.sort(((a,b) => b.importance - a.importance));
                 break;
             default:
-
         }
         this.notes = data.notes;
         return this.notes;
     };
 
-    this.getLocalData = function(){
+    this.getLocalData = function(showActive = false){
         let data = localStorage.getItem(this.localStorageKey);
         if(data == null){
             data = {
@@ -61,20 +61,25 @@ function DataController(mainController){
             };
         } else {
             data  = JSON.parse(data);
+            if(!showActive){
+                let actives = [];
+                data.notes.forEach(function(elem, index){
+                    if(elem.active == false) {
+                        actives.push(elem);
+                    }
+                });
+                data.notes = actives;
+            }
         }
         return data;
     };
     this.saveLocalNote = function(note){
-        console.log(note);
-        let data = this.getLocalData();
+        let data = this.getLocalData(true);
         if(note.id){
             //Update
-            console.log("CHECK FOR UPDATE", note.id);
             data.notes.forEach(function(elem, index){
                 if(elem.id == note.id){
-                    console.log("Update found", note);
                     data.notes[index] = note;
-                    console.log("Update found 2", data);
                 }
             });
         } else {
@@ -98,7 +103,7 @@ function EditorController(mainController){
             ShowElementById("editor-wrapper");
             let note = new Note();
             if(elementId){
-                note = this.getNoteById(elementId);
+                note = mainController.getNoteById(elementId);
             } else {
                 note = new Note();
             }
@@ -109,15 +114,7 @@ function EditorController(mainController){
         }
     };
 
-    this.getNoteById = function(id){
-        let note = new Note();
-        mainController.data.notes.forEach(function(elem, index){
-            if(elem.id == id) {
-                note.update(elem);
-            }
-        });
-        return note;
-    };
+
     this.submit = function(){
         let form = document.forms.newNote;
         //TODO Validate
@@ -129,7 +126,7 @@ function EditorController(mainController){
         };
         this.currentNote.update(n);
         mainController.data.saveLocalNote(this.currentNote);
-        mainController.init("due");
+        mainController.init();
         this.show(false);
     };
     this.setForm = function(note){
@@ -148,30 +145,60 @@ function EditorController(mainController){
 function MainController(){
     this.data = new DataController(this);
     this.editor = new EditorController(this);
+    this.theme = new ThemeController(this);
 
-    this.init = function(sortBy){
-        if(sortBy){
-            document.getElementById("sort-"+sortBy).checked = true;
-        }
-        this.data.getNotes(sortBy);
+    this.showDone = false;
+    this.currentSort = "due";
+
+    this.init = function(){
+        document.getElementById("sort-"+this.currentSort).checked = true;
+
+        this.data.getNotes(this.currentSort, this.showDone);
         this.populateData();
     };
 
     this.populateData = function(){
         var output = "";
-
+        let template = null;
         if(this.data.notes.length > 0){
-            let template = document.getElementById("list__item__template").innerHTML;
+            template = document.getElementById("list__item__template").innerHTML;
             Mustache.parse(template);
 
             this.data.notes.forEach(function(elem, index){
                 elem.dateFormatted = moment(elem.date).format('ll');
+                elem.importanceIcons = "";
+                for(var i=0;i<5;i++){
+                    elem.importanceIcons += "<i class=\"list__item__importance__icon "+(i<elem.importance ? "list__item__importance__icon--active" : "")+"\">•</i>";
+                }
                 output += Mustache.render(template, elem);
             });
         } else {
-            output = Mustache.render(document.getElementById("list__nodata__template").innerHTML);
+            template = document.getElementById("list__nodata__template").innerHTML;
+            output = Mustache.render(template);
         }
         document.getElementById('list__container').innerHTML = output;
+    };
+    this.activate = function(id, checkbox){
+        let note = this.getNoteById(id);
+        note.active = checkbox.checked;
+        this.data.saveLocalNote(note);
+        /*setTimeout(function(){
+            alert("delay");
+        }, 2500);*/
+        this.init();
+    };
+    this.getNoteById = function(id){
+        let note = new Note();
+        this.data.notes.forEach(function(elem, index){
+            if(elem.id == id) {
+                note.update(elem);
+            }
+        });
+        return note;
+    };
+    this.setActives = function(checkbox){
+        this.showDone = checkbox.checked;
+        this.init();
     };
 }
 ;/**
@@ -198,6 +225,6 @@ function Note(){
 };/**
  * Created by Hedgehog on 16.05.18.
  */
-function ThemeController(){
+function ThemeController(mainController){
     console.log("Theme Controller");
 }

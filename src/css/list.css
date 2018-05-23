@@ -38,3 +38,11 @@
     border-bottom: 1px solid transparent;
     padding-bottom: 20px;
 }
+.list__item__importance__icon{
+    margin: 0 5px;
+    font-size: 18px;
+    opacity: 0.2;
+}
+.list__item__importance__icon--active{
+    opacity: 1;
+}

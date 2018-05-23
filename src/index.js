@@ -8,7 +8,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
 document.getElementById('list-wrapper').onchange = function(e) {
     //Watching for cahnges in sort list
     if(e.target.tagName.toLowerCase() === 'input' && e.target.type === 'radio') {
-        mainController.init(e.target.value);
+        mainController.currentSort = e.target.value;
+        mainController.init();
     }
 };
 

@@ -5,9 +5,9 @@ function DataController(mainController){
     this.localStorageKey = "remindeer";
     this.notes = [];
 
-    this.getNotes = function(sort = null){
+    this.getNotes = function(sort = null, showActive = false){
         //get data
-        let data = this.getLocalData();
+        let data = this.getLocalData(showActive);
 
         //Check API Version, etc...
 
@@ -23,13 +23,12 @@ function DataController(mainController){
                 data.notes.sort(((a,b) => b.importance - a.importance));
                 break;
             default:
-
         }
         this.notes = data.notes;
         return this.notes;
     };
 
-    this.getLocalData = function(){
+    this.getLocalData = function(showActive = false){
         let data = localStorage.getItem(this.localStorageKey);
         if(data == null){
             data = {
@@ -39,20 +38,25 @@ function DataController(mainController){
             };
         } else {
             data  = JSON.parse(data);
+            if(!showActive){
+                let actives = [];
+                data.notes.forEach(function(elem, index){
+                    if(elem.active == false) {
+                        actives.push(elem);
+                    }
+                });
+                data.notes = actives;
+            }
         }
         return data;
     };
     this.saveLocalNote = function(note){
-        console.log(note);
-        let data = this.getLocalData();
+        let data = this.getLocalData(true);
         if(note.id){
             //Update
-            console.log("CHECK FOR UPDATE", note.id);
             data.notes.forEach(function(elem, index){
                 if(elem.id == note.id){
-                    console.log("Update found", note);
                     data.notes[index] = note;
-                    console.log("Update found 2", data);
                 }
             });
         } else {

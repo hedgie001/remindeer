@@ -13,7 +13,10 @@
         <div class="title nav-title">
             <h1>Remindeer</h1>
         </div>
-        <div>right</div>
+        <div>
+            <input type="checkbox" id="set-actives" onchange="mainController.setActives(this)">
+            <label for="set-actives">Show Done</label>
+        </div>
     </nav>
     <div class="grid-container">
         <aside></aside>
@@ -37,13 +40,13 @@
                     <script id="list__item__template" type="x-tmpl-mustache">
                         <div class="list__item" id="list__item__id__{{id}}">
                             <div class="list__item__checkbox">
-                                <input type="checkbox" {{#active}}checked{{/active}}>
+                                <input type="checkbox" onchange="mainController.activate({{id}}, this)" {{#active}}checked{{/active}}>
                             </div>
                             <div class="list__item__title">
                                 <h3 class="list__item__title__date">{{dateFormatted}}</h3>
                                 <h2 class="list__item__title__label">{{title}}</h2>
                             </div>
-                            <div class="list__item__importance">{{importance}}</div>
+                            <div class="list__item__importance">{{{importanceIcons}}}</div>
                             <div class="list__item__description">
                                 <p>{{description}}</p>
                             </div>

@@ -94,7 +94,8 @@ module.exports = function(grunt) {
                 options: {
                     port: 1337,
                     base: 'public/',
-                    keepalve: true
+                    keepalve: true,
+                    open: true
                 }
             }
         }

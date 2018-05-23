@@ -112,6 +112,14 @@ nav .title {
     border-bottom: 1px solid transparent;
     padding-bottom: 20px;
 }
+.list__item__importance__icon{
+    margin: 0 5px;
+    font-size: 18px;
+    opacity: 0.2;
+}
+.list__item__importance__icon--active{
+    opacity: 1;
+}
 
 .sort{
     display: flex;
@@ -140,6 +148,9 @@ nav .title {
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
 }
+.body--blue-steel {
+    background-color: white;
+}
 .nav--default{
     background-color: #fbc02d;
 }
@@ -154,4 +165,7 @@ nav .title {
 }
 .list__item__edit--default{
     border-color: #E4E4E4;
+}
+.body--le-tigre {
+    background-color: white;
 }

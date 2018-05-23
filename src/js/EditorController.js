@@ -10,7 +10,7 @@ function EditorController(mainController){
             ShowElementById("editor-wrapper");
             let note = new Note();
             if(elementId){
-                note = this.getNoteById(elementId);
+                note = mainController.getNoteById(elementId);
             } else {
                 note = new Note();
             }
@@ -21,15 +21,7 @@ function EditorController(mainController){
         }
     };
 
-    this.getNoteById = function(id){
-        let note = new Note();
-        mainController.data.notes.forEach(function(elem, index){
-            if(elem.id == id) {
-                note.update(elem);
-            }
-        });
-        return note;
-    };
+
     this.submit = function(){
         let form = document.forms.newNote;
         //TODO Validate
@@ -41,7 +33,7 @@ function EditorController(mainController){
         };
         this.currentNote.update(n);
         mainController.data.saveLocalNote(this.currentNote);
-        mainController.init("due");
+        mainController.init();
         this.show(false);
     };
     this.setForm = function(note){
