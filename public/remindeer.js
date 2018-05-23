@@ -1,17 +1,45 @@
-var mainController = new MainController();
-
 document.addEventListener("DOMContentLoaded", function(event) {
-    console.log("init");
+
     moment.locale(document.documentElement.lang);
-    mainController.init("due");
+
+    let mainController = new MainController();
+
+    //Event Listeners
+    let list = document.getElementById("list__container");
+    list.addEventListener('click', function (e) {
+        let type = e.target.type;
+        if(type == "submit") mainController.editor.show(true, e.target.dataset.id);
+        if(type == "checkbox") mainController.activate(e.target.dataset.id, e.target);
+    });
+    let listCreate = document.getElementById("list__fab");
+    listCreate.addEventListener('click', function (e) {
+        mainController.editor.show(true);
+    });
+    let editorCreate = document.getElementById("editor__closebutton");
+    editorCreate.addEventListener('click', function (e) {
+        mainController.editor.show(false);
+    });
+    let editorClose = document.getElementById("editor__savebutton");
+    editorClose.addEventListener('click', function (e) {
+        mainController.editor.submit();
+    });
+    let themeSelector = document.getElementById("nav__themeselector");
+    themeSelector.addEventListener('change', function (e) {
+        mainController.theme.onChange(e.target.value);
+    });
+    let showDone = document.getElementById("nav__showdone");
+    showDone.addEventListener('change', function(e){
+        mainController.setActives(e.target.checked);
+    });
+    let listChange = document.getElementById('list-wrapper');
+    listChange.addEventListener('change', function (e) {
+        if(e.target.tagName.toLowerCase() === 'input' && e.target.type === 'radio') {
+            mainController.currentSort = e.target.value;
+            mainController.init();
+        }
+    });
+    mainController.init();
 });
-document.getElementById('list-wrapper').onchange = function(e) {
-    //Watching for cahnges in sort list
-    if(e.target.tagName.toLowerCase() === 'input' && e.target.type === 'radio') {
-        mainController.currentSort = e.target.value;
-        mainController.init();
-    }
-};
 
 //HELPERS
 function HideElementById(selector){
@@ -97,6 +125,7 @@ function DataController(mainController){
 
 function EditorController(mainController){
     this.currentNote = null;
+    let inputFields = document.getElementsByClassName("editor__formgroup");
     this.show = function(state, elementId = null){
         if(state){
             HideElementById("list-wrapper");
@@ -137,8 +166,40 @@ function EditorController(mainController){
         form.importance.value = note.importance;
 
         this.currentNote = note;
+        for (let item of inputFields) {
+            let inputField = item.getElementsByTagName("input")[0];
+            let labelField = item.getElementsByTagName("label")[0];
+            labelField.classList.remove("editor__formgroup__label--animate");
+
+            if(inputField.value != "") labelField.classList.add("editor__formgroup__label--small");
+            else labelField.classList.remove("editor__formgroup__label--small");
+        }
+
     };
-    this.show(false);
+    this.show(true);
+    this.onFocus = function(){
+        console.log("focus222");
+    };
+
+
+    this.onFocus = function(label){
+        label.classList.add("editor__formgroup__label--small");
+        label.classList.add("editor__formgroup__label--animate");
+    };
+    this.onBlur = function(label, event){
+        if(event.target.value == ""){
+            label.classList.remove("editor__formgroup__label--small");
+        }
+    };
+    for (let item of inputFields) {
+        let inputField = item.getElementsByTagName("input")[0];
+        let labelField = item.getElementsByTagName("label")[0];
+        inputField.forLabel = labelField;
+        if (inputField && labelField){
+            inputField.addEventListener('focus', this.onFocus.bind(this, labelField));
+            inputField.addEventListener('blur', this.onBlur.bind(this, labelField));
+        }
+    }
 };/**
  * Created by Hedgehog on 16.05.18.
  */
@@ -151,8 +212,7 @@ function MainController(){
     this.currentSort = "due";
 
     this.init = function(){
-        document.getElementById("sort-"+this.currentSort).checked = true;
-
+        document.getElementById("sort__"+this.currentSort).checked = true;
         this.data.getNotes(this.currentSort, this.showDone);
         this.populateData();
     };
@@ -196,8 +256,8 @@ function MainController(){
         });
         return note;
     };
-    this.setActives = function(checkbox){
-        this.showDone = checkbox.checked;
+    this.setActives = function(checked){
+        this.showDone = checked;
         this.init();
     };
 }
@@ -226,5 +286,9 @@ function Note(){
  * Created by Hedgehog on 16.05.18.
  */
 function ThemeController(mainController){
-    console.log("Theme Controller");
+    this.currentTheme = "default";
+    this.onChange = function(value){
+        console.log("Change Theme to: "+value);
+        this.currentTheme = value;
+    };
 }

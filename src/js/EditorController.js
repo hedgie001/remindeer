@@ -4,6 +4,7 @@
 
 function EditorController(mainController){
     this.currentNote = null;
+    let inputFields = document.getElementsByClassName("editor__formgroup");
     this.show = function(state, elementId = null){
         if(state){
             HideElementById("list-wrapper");
@@ -44,6 +45,38 @@ function EditorController(mainController){
         form.importance.value = note.importance;
 
         this.currentNote = note;
+        for (let item of inputFields) {
+            let inputField = item.getElementsByTagName("input")[0];
+            let labelField = item.getElementsByTagName("label")[0];
+            labelField.classList.remove("editor__formgroup__label--animate");
+
+            if(inputField.value != "") labelField.classList.add("editor__formgroup__label--small");
+            else labelField.classList.remove("editor__formgroup__label--small");
+        }
+
     };
-    this.show(false);
+    this.show(true);
+    this.onFocus = function(){
+        console.log("focus222");
+    };
+
+
+    this.onFocus = function(label){
+        label.classList.add("editor__formgroup__label--small");
+        label.classList.add("editor__formgroup__label--animate");
+    };
+    this.onBlur = function(label, event){
+        if(event.target.value == ""){
+            label.classList.remove("editor__formgroup__label--small");
+        }
+    };
+    for (let item of inputFields) {
+        let inputField = item.getElementsByTagName("input")[0];
+        let labelField = item.getElementsByTagName("label")[0];
+        inputField.forLabel = labelField;
+        if (inputField && labelField){
+            inputField.addEventListener('focus', this.onFocus.bind(this, labelField));
+            inputField.addEventListener('blur', this.onBlur.bind(this, labelField));
+        }
+    }
 }

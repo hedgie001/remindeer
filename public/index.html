@@ -11,11 +11,16 @@
             logo
         </div>
         <div class="title nav-title">
-            <h1>Remindeer</h1>
+            Remindeer
         </div>
         <div>
-            <input type="checkbox" id="set-actives" onchange="mainController.setActives(this)">
-            <label for="set-actives">Show Done</label>
+            <input type="checkbox" id="nav__showdone">
+            <label for="nav__showdone">Show Done</label>
+            <select id="nav__themeselector">
+                <option value="default">Normal</option>
+                <option value="blue-steel">Blue Steel</option>
+                <option value="le-tigre">Le Tigre</option>
+            </select>
         </div>
     </nav>
     <div class="grid-container">
@@ -24,23 +29,23 @@
             <div id="list-wrapper">
                 <div class="sort">
                     <div class="sort__formgroup">
-                        <input class="sort__formgroup__radio" type="radio" id="sort-due" name="sort" value="due" checked>
-                        <label class="sort__formgroup__label sort__formgroup__label--default" for="sort-due">Due</label>
+                        <input class="sort__formgroup__radio" type="radio" id="sort__due" name="sort" value="due" checked>
+                        <label class="sort__formgroup__label sort__formgroup__label--default" for="sort__due">Due</label>
                     </div>
                     <div class="sort__formgroup">
-                        <input class="sort__formgroup__radio" type="radio" id="sort-created" name="sort" value="created">
-                        <label class="sort__formgroup__label sort__formgroup__label--default" for="sort-created">Created</label>
+                        <input class="sort__formgroup__radio" type="radio" id="sort__created" name="sort" value="created">
+                        <label class="sort__formgroup__label sort__formgroup__label--default" for="sort__created">Created</label>
                     </div>
                     <div class="sort__formgroup">
-                        <input class="sort__formgroup__radio" type="radio" id="sort-importance" name="sort" value="importance">
-                        <label class="sort__formgroup__label sort__formgroup__label--default" for="sort-importance">Importance</label>
+                        <input class="sort__formgroup__radio" type="radio" id="sort__importance" name="sort" value="importance">
+                        <label class="sort__formgroup__label sort__formgroup__label--default" for="sort__importance">Importance</label>
                     </div>
                 </div>
                 <div class="list">
                     <script id="list__item__template" type="x-tmpl-mustache">
-                        <div class="list__item" id="list__item__id__{{id}}">
+                        <div class="list__item" id="list__item__id__{{id}}" data-id="{{id}}">
                             <div class="list__item__checkbox">
-                                <input type="checkbox" onchange="mainController.activate({{id}}, this)" {{#active}}checked{{/active}}>
+                                <input type="checkbox" data-id="{{id}}" {{#active}}checked{{/active}}>
                             </div>
                             <div class="list__item__title">
                                 <h3 class="list__item__title__date">{{dateFormatted}}</h3>
@@ -50,7 +55,9 @@
                             <div class="list__item__description">
                                 <p>{{description}}</p>
                             </div>
-                            <div class="list__item__edit list__item__edit--default"><button onclick="mainController.editor.show(true, '{{id}}')">edit</button></div>
+                            <div class="list__item__edit list__item__edit--default">
+                                <button type="submit" data-id='{{id}}'>edit</button>
+                            </div>
                         </div>
                     </script>
                     <script id="list__nodata__template" type="x-tmpl-mustache">
@@ -60,7 +67,7 @@
                         Laden...
                     </script>
                     <div id="list__container"></div>
-                    <button id="create" class="list__fab" onclick="mainController.editor.show(true)">+</button>
+                    <button id="list__fab" class="list__fab--default">+</button>
                 </div>
             </div>
             <div id="editor-wrapper">
@@ -70,31 +77,31 @@
                     </div>
                     <form id="newNote" action="" name="newNote"  onsubmit="return false">
                         <div class="editor__formgroup">
-                            <label>Title</label>
-                            <input type="text" name="title">
+                            <input class="editor__formgroup__input" type="text" name="title">
+                            <label class="editor__formgroup__label">Title</label>
                         </div>
                         <div class="editor__formgroup">
-                            <label>Description</label>
-                            <textarea name="description"></textarea>
+                            <input name="description" class="editor__formgroup__input"></input>
+                            <label class="editor__formgroup__label">Description</label>
                         </div>
                         <div class="editor__formgroup">
-                            <label>Importance</label>
+                            <label class="">Importance</label>
                             <input type="number" name="importance"/>
                         </div>
                         <div class="editor__formgroup">
                             <label>Date</label>
                             <input type="date" name="date">
                         </div>
-                        <button type="button" onclick="mainController.editor.show(false)">abbrechen</button>
-                        <button type="submit" name="save" onclick="mainController.editor.submit()"/>Speichern</button>
+                        <button type="button" id="editor__closebutton">abbrechen</button>
+                        <button type="submit" id="editor__savebutton" name="save">Speichern</button>
                     </form>
                 </div>
             </div>
         </main>
         <aside></aside>
     </div>
-    <script type="text/javascript" src="libs/moment-with-locales.min.js"></script>
-    <script type="text/javascript" src="libs/mustache.min.js"></script>
-    <script type="text/javascript" src="remindeer.js"></script>
+    <script src="libs/moment-with-locales.min.js"></script>
+    <script src="libs/mustache.min.js"></script>
+    <script src="remindeer.js"></script>
 </body>
 </html>

@@ -10,8 +10,7 @@ function MainController(){
     this.currentSort = "due";
 
     this.init = function(){
-        document.getElementById("sort-"+this.currentSort).checked = true;
-
+        document.getElementById("sort__"+this.currentSort).checked = true;
         this.data.getNotes(this.currentSort, this.showDone);
         this.populateData();
     };
@@ -55,8 +54,8 @@ function MainController(){
         });
         return note;
     };
-    this.setActives = function(checkbox){
-        this.showDone = checkbox.checked;
+    this.setActives = function(checked){
+        this.showDone = checked;
         this.init();
     };
 }
