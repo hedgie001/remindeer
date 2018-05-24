@@ -182,8 +182,20 @@ nav .title {
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
 }
+.nav--blue-steel{
+    background-color: blue;
+}
 .body--blue-steel {
     background-color: white;
+}
+.sort__formgroup__label--blue-steel{
+    border-bottom: 1px solid #E4E4E4;
+}
+.sort__formgroup__radio:checked + .sort__formgroup__label--blue-steel{
+    border-bottom: 2px solid blue;
+}
+.list__item__edit--blue-steel{
+    border-color: #E4E4E4;
 }
 .nav--default{
     background-color: #fbc02d;
@@ -200,6 +212,18 @@ nav .title {
 .list__item__edit--default{
     border-color: #E4E4E4;
 }
+.nav--le-tigre{
+    background-color: red;
+}
 .body--le-tigre {
     background-color: white;
+}
+.sort__formgroup__label--le-tigre{
+    border-bottom: 1px solid #E4E4E4;
+}
+.sort__formgroup__radio:checked + .sort__formgroup__label--le-tigre{
+    border-bottom: 2px solid red;
+}
+.list__item__edit--le-tigre{
+    border-color: #E4E4E4;
 }

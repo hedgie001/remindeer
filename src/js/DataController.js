@@ -28,6 +28,16 @@ function DataController(mainController){
         return this.notes;
     };
 
+    this.getNoteById = function(id){
+        let note = new Note();
+        this.notes.forEach(function(elem, index){
+            if(elem.id == id) {
+                note.update(elem);
+            }
+        });
+        return note;
+    };
+
     this.getLocalData = function(showActive = false){
         let data = localStorage.getItem(this.localStorageKey);
         if(data == null){

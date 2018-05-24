@@ -5,6 +5,7 @@ function MainController(){
     this.data = new DataController(this);
     this.editor = new EditorController(this);
     this.theme = new ThemeController(this);
+    this.editor.show(false);
 
     this.showDone = false;
     this.currentSort = "due";
@@ -37,22 +38,13 @@ function MainController(){
         document.getElementById('list__container').innerHTML = output;
     };
     this.activate = function(id, checkbox){
-        let note = this.getNoteById(id);
+        let note = this.data.getNoteById(id);
         note.active = checkbox.checked;
         this.data.saveLocalNote(note);
         /*setTimeout(function(){
             alert("delay");
         }, 2500);*/
         this.init();
-    };
-    this.getNoteById = function(id){
-        let note = new Note();
-        this.data.notes.forEach(function(elem, index){
-            if(elem.id == id) {
-                note.update(elem);
-            }
-        });
-        return note;
     };
     this.setActives = function(checked){
         this.showDone = checked;

@@ -11,7 +11,7 @@ function EditorController(mainController){
             ShowElementById("editor-wrapper");
             let note = new Note();
             if(elementId){
-                note = mainController.getNoteById(elementId);
+                note = mainController.data.getNoteById(elementId);
             } else {
                 note = new Note();
             }
@@ -38,28 +38,22 @@ function EditorController(mainController){
         this.show(false);
     };
     this.setForm = function(note){
+        let checkLabel = function(label){
+            if(label.value != "") label.forLabel.classList.add("editor__formgroup__label--small");
+            else label.forLabel.classList.remove("editor__formgroup__label--small");
+        };
         let form = document.forms.newNote;
         form.title.value = note.title;
+        checkLabel(form.title);
         form.description.value = note.description;
+        checkLabel(form.description);
         form.date.value = moment(note.date).format("YYYY-MM-DD");
         form.importance.value = note.importance;
 
+
         this.currentNote = note;
-        for (let item of inputFields) {
-            let inputField = item.getElementsByTagName("input")[0];
-            let labelField = item.getElementsByTagName("label")[0];
-            labelField.classList.remove("editor__formgroup__label--animate");
-
-            if(inputField.value != "") labelField.classList.add("editor__formgroup__label--small");
-            else labelField.classList.remove("editor__formgroup__label--small");
-        }
 
     };
-    this.show(true);
-    this.onFocus = function(){
-        console.log("focus222");
-    };
-
 
     this.onFocus = function(label){
         label.classList.add("editor__formgroup__label--small");
@@ -73,8 +67,8 @@ function EditorController(mainController){
     for (let item of inputFields) {
         let inputField = item.getElementsByTagName("input")[0];
         let labelField = item.getElementsByTagName("label")[0];
-        inputField.forLabel = labelField;
         if (inputField && labelField){
+            inputField.forLabel = labelField;
             inputField.addEventListener('focus', this.onFocus.bind(this, labelField));
             inputField.addEventListener('blur', this.onBlur.bind(this, labelField));
         }

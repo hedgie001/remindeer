@@ -79,6 +79,16 @@ function DataController(mainController){
         return this.notes;
     };
 
+    this.getNoteById = function(id){
+        let note = new Note();
+        this.notes.forEach(function(elem, index){
+            if(elem.id == id) {
+                note.update(elem);
+            }
+        });
+        return note;
+    };
+
     this.getLocalData = function(showActive = false){
         let data = localStorage.getItem(this.localStorageKey);
         if(data == null){
@@ -132,7 +142,7 @@ function EditorController(mainController){
             ShowElementById("editor-wrapper");
             let note = new Note();
             if(elementId){
-                note = mainController.getNoteById(elementId);
+                note = mainController.data.getNoteById(elementId);
             } else {
                 note = new Note();
             }
@@ -159,28 +169,22 @@ function EditorController(mainController){
         this.show(false);
     };
     this.setForm = function(note){
+        let checkLabel = function(label){
+            if(label.value != "") label.forLabel.classList.add("editor__formgroup__label--small");
+            else label.forLabel.classList.remove("editor__formgroup__label--small");
+        };
         let form = document.forms.newNote;
         form.title.value = note.title;
+        checkLabel(form.title);
         form.description.value = note.description;
+        checkLabel(form.description);
         form.date.value = moment(note.date).format("YYYY-MM-DD");
         form.importance.value = note.importance;
 
+
         this.currentNote = note;
-        for (let item of inputFields) {
-            let inputField = item.getElementsByTagName("input")[0];
-            let labelField = item.getElementsByTagName("label")[0];
-            labelField.classList.remove("editor__formgroup__label--animate");
-
-            if(inputField.value != "") labelField.classList.add("editor__formgroup__label--small");
-            else labelField.classList.remove("editor__formgroup__label--small");
-        }
 
     };
-    this.show(true);
-    this.onFocus = function(){
-        console.log("focus222");
-    };
-
 
     this.onFocus = function(label){
         label.classList.add("editor__formgroup__label--small");
@@ -194,8 +198,8 @@ function EditorController(mainController){
     for (let item of inputFields) {
         let inputField = item.getElementsByTagName("input")[0];
         let labelField = item.getElementsByTagName("label")[0];
-        inputField.forLabel = labelField;
         if (inputField && labelField){
+            inputField.forLabel = labelField;
             inputField.addEventListener('focus', this.onFocus.bind(this, labelField));
             inputField.addEventListener('blur', this.onBlur.bind(this, labelField));
         }
@@ -207,6 +211,7 @@ function MainController(){
     this.data = new DataController(this);
     this.editor = new EditorController(this);
     this.theme = new ThemeController(this);
+    this.editor.show(false);
 
     this.showDone = false;
     this.currentSort = "due";
@@ -239,22 +244,13 @@ function MainController(){
         document.getElementById('list__container').innerHTML = output;
     };
     this.activate = function(id, checkbox){
-        let note = this.getNoteById(id);
+        let note = this.data.getNoteById(id);
         note.active = checkbox.checked;
         this.data.saveLocalNote(note);
         /*setTimeout(function(){
             alert("delay");
         }, 2500);*/
         this.init();
-    };
-    this.getNoteById = function(id){
-        let note = new Note();
-        this.data.notes.forEach(function(elem, index){
-            if(elem.id == id) {
-                note.update(elem);
-            }
-        });
-        return note;
     };
     this.setActives = function(checked){
         this.showDone = checked;
@@ -287,8 +283,19 @@ function Note(){
  */
 function ThemeController(mainController){
     this.currentTheme = "default";
-    this.onChange = function(value){
-        console.log("Change Theme to: "+value);
-        this.currentTheme = value;
+    this.onChange = function(newTheme){
+        console.log("Change Theme to: "+newTheme);
+        let oldTheme = this.currentTheme;
+        let changeClassTheme = function(classContent){
+            return classContent.replace("--"+oldTheme, "--"+newTheme);
+        };
+        let allNodes = document.querySelectorAll('*');
+        allNodes.forEach(function(node) {
+            let classContent = node.getAttribute("class");
+            if(classContent){
+                node.setAttribute("class", changeClassTheme(classContent));
+            }
+        });
+        this.currentTheme = newTheme;
     };
 }
