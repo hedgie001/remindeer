@@ -4,7 +4,7 @@
 function MainController(){
     this.data = new DataController(this);
     this.editor = new EditorController(this);
-    this.editor.show(true);
+    this.editor.show(false);
     this.theme = new ThemeController(this);
 
     this.showDone = false;

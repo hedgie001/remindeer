@@ -87,14 +87,16 @@
                         <div class="editor__listgroup">
                             <label class="editor__listgroup__label">Importance</label>
                             <ul id="editor__listgroup__importanceselector" class="editor__listgroup__importanceselector">
-                                <script id="editor_listgroup__importanceselector__template" type="x-tmpl-mustache">
-                                    <li class="editor__listgroup__importanceselector_listitem"><a href="#" class="editor__listgroup__importanceselector__icon">•</a></li>
-                                </script>
                             </ul>
+                            <script id="editor_listgroup__importanceselector__template" type="x-tmpl-mustache">
+                                <li class="editor__listgroup__importanceselector_listitem"><a href="#" class="editor__listgroup__importanceselector__icon" data-index="{{index}}">•</a></li>
+                            </script>
                         </div>
-                        <div class="editor__formgroup">
-                            <label>Date</label>
-                            <input type="date" name="date">
+                        <div class="editor__listgroup">
+                            <label class="editor__listgroup__label">Date</label>
+                            <div class="editor__listgroup__dateselector">
+                                <input type="date" name="date">
+                            </div>
                         </div>
                         <button type="button" id="editor__closebutton">abbrechen</button>
                         <button type="submit" id="editor__savebutton" name="save">Speichern</button>

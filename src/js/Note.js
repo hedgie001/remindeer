@@ -7,7 +7,7 @@ function Note(){
     this.description = "";
     this.date = null;
     this.created = new Date().getTime();
-    this.importance = 0;
+    this.importance = 1;
     this.active = false;
 
     this.update = function(data){

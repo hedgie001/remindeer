@@ -29,7 +29,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
         anchor.addEventListener('mouseover', mainController.editor.editorImportanceIconOver.bind(this));
         anchor.addEventListener('mouseout', mainController.editor.editorImportanceIconOut.bind(this));
         anchor.addEventListener('click', mainController.editor.editorImportanceIconClick.bind(this));
-    } 
+    }
+    //document.getElementsByClassName("editor__listgroup__importanceselector")[0].addEventListener('mouseout', mainController.editor.editorImportanceIconOut.bind(this));
     let themeSelector = document.getElementById("nav__themeselector");
     themeSelector.addEventListener('change', function (e) {
         mainController.theme.onChange(e.target.value);

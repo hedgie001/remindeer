@@ -9,7 +9,6 @@ function ThemeController(mainController){
     };
     this.redraw = function(newTheme = null){
         let oldTheme = this.currentTheme;
-        console.log("redraw", oldTheme, newTheme);
         let changeClassTheme = function(classContent){
             return classContent.replace("--"+oldTheme, "--"+newTheme);
         };

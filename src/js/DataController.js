@@ -43,7 +43,6 @@ function DataController(mainController){
         if(data == null){
             data = {
                 "api": "1.0.0",
-                "empty" : true,
                 "notes": []
             };
         } else {
@@ -74,7 +73,6 @@ function DataController(mainController){
             note.id = data.notes.length+1;
             data.notes.push(note);
         }
-        data.empty = false;
         localStorage.setItem(this.localStorageKey, JSON.stringify(data));
         return data;
     };
