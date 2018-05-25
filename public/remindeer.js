@@ -23,6 +23,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
     editorClose.addEventListener('click', function (e) {
         mainController.editor.submit();
     });
+    let editorImportanceIcons = document.getElementsByClassName("editor__listgroup__importanceselector_listitem");
+    for (let icon of editorImportanceIcons) {
+        let anchor = icon.getElementsByTagName("a")[0];
+        anchor.addEventListener('mouseover', mainController.editor.editorImportanceIconOver.bind(this));
+        anchor.addEventListener('mouseout', mainController.editor.editorImportanceIconOut.bind(this));
+        anchor.addEventListener('click', mainController.editor.editorImportanceIconClick.bind(this));
+    } 
     let themeSelector = document.getElementById("nav__themeselector");
     themeSelector.addEventListener('change', function (e) {
         mainController.theme.onChange(e.target.value);
@@ -179,8 +186,15 @@ function EditorController(mainController){
         form.description.value = note.description;
         checkLabel(form.description);
         form.date.value = moment(note.date).format("YYYY-MM-DD");
-        form.importance.value = note.importance;
+        //form.importance.value = note.importance;
 
+        let importanceListItemTemplate = document.getElementById("editor_listgroup__importanceselector__template").innerHTML;
+        Mustache.parse(importanceListItemTemplate);
+        var importanceListItems = "";
+        for(var i=0;i<5;i++){
+            importanceListItems += Mustache.render(importanceListItemTemplate);
+        }
+        document.getElementById('editor__listgroup__importanceselector').innerHTML = importanceListItems;
 
         this.currentNote = note;
 
@@ -196,21 +210,31 @@ function EditorController(mainController){
         }
     };
     for (let item of inputFields) {
-        let inputField = item.getElementsByTagName("input")[0];
-        let labelField = item.getElementsByTagName("label")[0];
+        let inputField = item.getElementsByClassName("editor__formgroup__input")[0];
+        let labelField = item.getElementsByClassName("editor__formgroup__label")[0];
         if (inputField && labelField){
             inputField.forLabel = labelField;
             inputField.addEventListener('focus', this.onFocus.bind(this, labelField));
             inputField.addEventListener('blur', this.onBlur.bind(this, labelField));
         }
     }
+    this.editorImportanceIconClick = function(e){
+        console.log("click", e);
+    };
+    this.editorImportanceIconOver = function(e){
+        console.log("over", e);
+    };
+    this.editorImportanceIconOut = function(e){
+        console.log("out", e);
+    };
+
 };/**
  * Created by Hedgehog on 16.05.18.
  */
 function MainController(){
     this.data = new DataController(this);
     this.editor = new EditorController(this);
-    this.editor.show(false);
+    this.editor.show(true);
     this.theme = new ThemeController(this);
 
     this.showDone = false;
@@ -269,7 +293,7 @@ function Note(){
     this.description = "";
     this.date = null;
     this.created = new Date().getTime();
-    this.importance = null;
+    this.importance = 0;
     this.active = false;
 
     this.update = function(data){

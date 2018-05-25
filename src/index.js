@@ -23,6 +23,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
     editorClose.addEventListener('click', function (e) {
         mainController.editor.submit();
     });
+    let editorImportanceIcons = document.getElementsByClassName("editor__listgroup__importanceselector_listitem");
+    for (let icon of editorImportanceIcons) {
+        let anchor = icon.getElementsByTagName("a")[0];
+        anchor.addEventListener('mouseover', mainController.editor.editorImportanceIconOver.bind(this));
+        anchor.addEventListener('mouseout', mainController.editor.editorImportanceIconOut.bind(this));
+        anchor.addEventListener('click', mainController.editor.editorImportanceIconClick.bind(this));
+    } 
     let themeSelector = document.getElementById("nav__themeselector");
     themeSelector.addEventListener('change', function (e) {
         mainController.theme.onChange(e.target.value);

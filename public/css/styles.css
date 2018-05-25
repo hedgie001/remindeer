@@ -34,6 +34,9 @@ p{
     opacity: 0.6;
     margin: 2px 0;
 }
+a {
+    text-decoration: none;
+}
 .editor__formgroup{
     position: relative;
     min-height: 56px;
@@ -67,6 +70,23 @@ p{
     font-size: 11px;
     top: 6px;
     margin-top: 0;
+}
+.editor__listgroup{
+    min-height: 56px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.editor__listgroup__label{
+    flex: 1;
+}
+.editor__listgroup__importanceselector{
+    display: flex;
+    padding: 0;
+}
+.editor__listgroup__importanceselector_listitem{
+    list-style: none;
 }
 .grid-container {
     display: grid;

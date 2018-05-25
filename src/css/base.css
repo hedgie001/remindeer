@@ -34,3 +34,6 @@ p{
     opacity: 0.6;
     margin: 2px 0;
 }
+a {
+    text-decoration: none;
+}

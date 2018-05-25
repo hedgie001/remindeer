@@ -48,8 +48,15 @@ function EditorController(mainController){
         form.description.value = note.description;
         checkLabel(form.description);
         form.date.value = moment(note.date).format("YYYY-MM-DD");
-        form.importance.value = note.importance;
+        //form.importance.value = note.importance;
 
+        let importanceListItemTemplate = document.getElementById("editor_listgroup__importanceselector__template").innerHTML;
+        Mustache.parse(importanceListItemTemplate);
+        var importanceListItems = "";
+        for(var i=0;i<5;i++){
+            importanceListItems += Mustache.render(importanceListItemTemplate);
+        }
+        document.getElementById('editor__listgroup__importanceselector').innerHTML = importanceListItems;
 
         this.currentNote = note;
 
@@ -65,12 +72,22 @@ function EditorController(mainController){
         }
     };
     for (let item of inputFields) {
-        let inputField = item.getElementsByTagName("input")[0];
-        let labelField = item.getElementsByTagName("label")[0];
+        let inputField = item.getElementsByClassName("editor__formgroup__input")[0];
+        let labelField = item.getElementsByClassName("editor__formgroup__label")[0];
         if (inputField && labelField){
             inputField.forLabel = labelField;
             inputField.addEventListener('focus', this.onFocus.bind(this, labelField));
             inputField.addEventListener('blur', this.onBlur.bind(this, labelField));
         }
     }
+    this.editorImportanceIconClick = function(e){
+        console.log("click", e);
+    };
+    this.editorImportanceIconOver = function(e){
+        console.log("over", e);
+    };
+    this.editorImportanceIconOut = function(e){
+        console.log("out", e);
+    };
+
 }

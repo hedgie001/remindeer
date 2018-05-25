@@ -84,9 +84,13 @@
                             <input name="description" class="editor__formgroup__input"></input>
                             <label class="editor__formgroup__label">Description</label>
                         </div>
-                        <div class="editor__formgroup">
-                            <label class="">Importance</label>
-                            <input type="number" name="importance"/>
+                        <div class="editor__listgroup">
+                            <label class="editor__listgroup__label">Importance</label>
+                            <ul id="editor__listgroup__importanceselector" class="editor__listgroup__importanceselector">
+                                <script id="editor_listgroup__importanceselector__template" type="x-tmpl-mustache">
+                                    <li class="editor__listgroup__importanceselector_listitem"><a href="#" class="editor__listgroup__importanceselector__icon">•</a></li>
+                                </script>
+                            </ul>
                         </div>
                         <div class="editor__formgroup">
                             <label>Date</label>
