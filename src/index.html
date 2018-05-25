@@ -28,15 +28,15 @@
         <main class="content">
             <div id="list-wrapper">
                 <div class="sort">
-                    <div class="sort__formgroup">
+                    <div class="sort__formgroup sort__formgroup--default">
                         <input class="sort__formgroup__radio" type="radio" id="sort__due" name="sort" value="due" checked>
                         <label class="sort__formgroup__label sort__formgroup__label--default" for="sort__due">Due</label>
                     </div>
-                    <div class="sort__formgroup">
+                    <div class="sort__formgroup sort__formgroup--default">
                         <input class="sort__formgroup__radio" type="radio" id="sort__created" name="sort" value="created">
                         <label class="sort__formgroup__label sort__formgroup__label--default" for="sort__created">Created</label>
                     </div>
-                    <div class="sort__formgroup">
+                    <div class="sort__formgroup sort__formgroup--default">
                         <input class="sort__formgroup__radio" type="radio" id="sort__importance" name="sort" value="importance">
                         <label class="sort__formgroup__label sort__formgroup__label--default" for="sort__importance">Importance</label>
                     </div>
@@ -55,7 +55,7 @@
                             <div class="list__item__description">
                                 <p>{{description}}</p>
                             </div>
-                            <div class="list__item__edit list__item__edit--default">
+                            <div class="list__item__edit list__item__edit--{{theme}}">
                                 <button type="submit" data-id='{{id}}'>edit</button>
                             </div>
                         </div>
@@ -67,7 +67,7 @@
                         Laden...
                     </script>
                     <div id="list__container"></div>
-                    <button id="list__fab" class="list__fab--default">+</button>
+                    <button id="list__fab" class="list__fab list__fab--default">+</button>
                 </div>
             </div>
             <div id="editor-wrapper">

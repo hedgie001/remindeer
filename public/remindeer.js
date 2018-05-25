@@ -210,8 +210,8 @@ function EditorController(mainController){
 function MainController(){
     this.data = new DataController(this);
     this.editor = new EditorController(this);
-    this.theme = new ThemeController(this);
     this.editor.show(false);
+    this.theme = new ThemeController(this);
 
     this.showDone = false;
     this.currentSort = "due";
@@ -227,11 +227,14 @@ function MainController(){
         let template = null;
         if(this.data.notes.length > 0){
             template = document.getElementById("list__item__template").innerHTML;
+            let theme = this.theme.currentTheme;
+
             Mustache.parse(template);
 
             this.data.notes.forEach(function(elem, index){
                 elem.dateFormatted = moment(elem.date).format('ll');
                 elem.importanceIcons = "";
+                elem.theme = theme;
                 for(var i=0;i<5;i++){
                     elem.importanceIcons += "<i class=\"list__item__importance__icon "+(i<elem.importance ? "list__item__importance__icon--active" : "")+"\">•</i>";
                 }
@@ -282,10 +285,14 @@ function Note(){
  * Created by Hedgehog on 16.05.18.
  */
 function ThemeController(mainController){
+    this.styleThemeKey = "remindeerTheme";
     this.currentTheme = "default";
     this.onChange = function(newTheme){
-        console.log("Change Theme to: "+newTheme);
+        this.redraw(newTheme);
+    };
+    this.redraw = function(newTheme = null){
         let oldTheme = this.currentTheme;
+        console.log("redraw", oldTheme, newTheme);
         let changeClassTheme = function(classContent){
             return classContent.replace("--"+oldTheme, "--"+newTheme);
         };
@@ -297,5 +304,9 @@ function ThemeController(mainController){
             }
         });
         this.currentTheme = newTheme;
+        localStorage.setItem(this.styleThemeKey, this.currentTheme);
+        document.getElementById("nav__themeselector").value = this.currentTheme;
     };
+    let localTheme = localStorage.getItem(this.styleThemeKey);
+    if (localTheme) this.redraw(localTheme);
 }

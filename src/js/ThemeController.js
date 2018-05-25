@@ -2,10 +2,14 @@
  * Created by Hedgehog on 16.05.18.
  */
 function ThemeController(mainController){
+    this.styleThemeKey = "remindeerTheme";
     this.currentTheme = "default";
     this.onChange = function(newTheme){
-        console.log("Change Theme to: "+newTheme);
+        this.redraw(newTheme);
+    };
+    this.redraw = function(newTheme = null){
         let oldTheme = this.currentTheme;
+        console.log("redraw", oldTheme, newTheme);
         let changeClassTheme = function(classContent){
             return classContent.replace("--"+oldTheme, "--"+newTheme);
         };
@@ -17,5 +21,9 @@ function ThemeController(mainController){
             }
         });
         this.currentTheme = newTheme;
+        localStorage.setItem(this.styleThemeKey, this.currentTheme);
+        document.getElementById("nav__themeselector").value = this.currentTheme;
     };
+    let localTheme = localStorage.getItem(this.styleThemeKey);
+    if (localTheme) this.redraw(localTheme);
 }

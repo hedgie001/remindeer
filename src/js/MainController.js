@@ -4,8 +4,8 @@
 function MainController(){
     this.data = new DataController(this);
     this.editor = new EditorController(this);
-    this.theme = new ThemeController(this);
     this.editor.show(false);
+    this.theme = new ThemeController(this);
 
     this.showDone = false;
     this.currentSort = "due";
@@ -21,11 +21,14 @@ function MainController(){
         let template = null;
         if(this.data.notes.length > 0){
             template = document.getElementById("list__item__template").innerHTML;
+            let theme = this.theme.currentTheme;
+
             Mustache.parse(template);
 
             this.data.notes.forEach(function(elem, index){
                 elem.dateFormatted = moment(elem.date).format('ll');
                 elem.importanceIcons = "";
+                elem.theme = theme;
                 for(var i=0;i<5;i++){
                     elem.importanceIcons += "<i class=\"list__item__importance__icon "+(i<elem.importance ? "list__item__importance__icon--active" : "")+"\">•</i>";
                 }
