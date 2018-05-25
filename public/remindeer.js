@@ -225,7 +225,7 @@ function EditorController(mainController){
     let updateImportanceIcons = function(value = null){
         if (value == null) value = note.importance;
         for (let icon of editorImportanceIcons){
-            if(icon.dataset.index < value) {
+            if(icon.dataset.index < value || icon.dataset.index < note.importance) {
                 icon.classList.add("editor__listgroup__importanceselector__icon--active");
             } else {
                 icon.classList.remove("editor__listgroup__importanceselector__icon--active");
@@ -242,8 +242,6 @@ function EditorController(mainController){
     this.editorImportanceIconOut = function(e){
         updateImportanceIcons();
     };
-
-
 };/**
  * Created by Hedgehog on 16.05.18.
  */
