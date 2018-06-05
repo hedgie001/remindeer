@@ -13,11 +13,45 @@
     src: url("../fonts/IBMPlexSans-Regular.ttf");
     font-weight: normal;
 }
+@font-face {
+    font-family: 'Material Icons';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Material Icons'),
+    local('MaterialIcons-Regular'),
+    url(../fonts/MaterialIcons-Regular.ttf) format('truetype');
+}
+.material-icons {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+
+    /* Support for all WebKit browsers. */
+    -webkit-font-smoothing: antialiased;
+    /* Support for Safari and Chrome. */
+    text-rendering: optimizeLegibility;
+
+    /* Support for Firefox. */
+    -moz-osx-font-smoothing: grayscale;
+
+    /* Support for IE. */
+    font-feature-settings: 'liga';
+}
+
 html, body{
     margin: 0;
     padding: 0;
     font-family: 'IBM Plex Sans', sans-serif;
     font-size: 14px;
+    min-height: 100vh;
 }
 h2 {
     font-size: 16px;
@@ -36,6 +70,23 @@ p{
 }
 a {
     text-decoration: none;
+}
+button{
+    border: none;
+    font-size: 16px;
+    opacity: 0.6;
+    cursor: pointer;
+    min-height: 38px;
+    padding: 0 20px;
+    border-radius: 3px;
+}
+button:hover{
+    opacity: 1;
+    background: rgba(0,0,0,0.08);
+    color: black;
+}
+.editor{
+    padding: 15px;
 }
 .editor__formgroup{
     position: relative;
@@ -65,6 +116,7 @@ a {
     padding-left: 15px;
     padding-top: 12px;
     font-size: 16px;
+    border-radius: 3px;
 }
 .editor__formgroup__label--small{
     font-size: 11px;
@@ -94,18 +146,13 @@ a {
     margin: 0;
     padding: 0 5px;
     opacity: 0.2;
-    font-style: normal;
-    font-family: "Material Icons";
-}
-.editor__listgroup__importanceselector__icon:after{
-    content: 'whatshot';
 }
 .editor__listgroup__importanceselector__icon--active{
     opacity: 1;
 }
 .grid-container {
     display: grid;
-    grid-template-columns: auto 320px auto;
+    grid-template-columns: 0 auto 0;
 }
 @media only screen and (min-width : 480px) {
     .grid-container {
@@ -126,20 +173,10 @@ a {
     margin-top: 56px;
     padding-top: 56px;
 }
-nav {
-    position: absolute;
-    width: 100%;
-    height: 56px;
-    top: 0;
-    display: flex;
-    align-items: center;
-
-    -webkit-box-shadow: 0px 2px 3px 0px rgba(0,0,0,0.4);
-    -moz-box-shadow: 0px 2px 3px 0px rgba(0,0,0,0.4);
-    box-shadow: 0px 2px 3px 0px rgba(0,0,0,0.4);
-}
-nav .title {
-    flex: 1;
+@media only screen and (max-width: 480px) {
+    .content {
+        margin-top: 0;
+    }
 }
 .list{
     margin-top: 28px;
@@ -151,7 +188,8 @@ nav .title {
     flex-direction: row;
     flex-wrap: wrap;
     align-items: center;
-    margin-bottom: 28px;
+    padding: 30px 15px 0 15px;
+    border-bottom: 1px solid grey;
 }
 .list__item__checkbox{
     width: 48px;
@@ -185,11 +223,6 @@ nav .title {
     margin: 0 5px;
     font-size: 18px;
     opacity: 0.2;
-    font-style: normal;
-    font-family: "Material Icons";
-}
-.list__item__importance__icon:after{
-    content: 'whatshot';
 }
 .list__item__importance__icon--active{
     opacity: 1;
@@ -205,16 +238,48 @@ nav .title {
     line-height: 26px;
     padding-bottom: 4px;
     border: none;
+    opacity: 1;
     cursor: pointer;
     -webkit-box-shadow: 0px 2px 3px 0px rgba(0,0,0,0.4);
     -moz-box-shadow: 0px 2px 3px 0px rgba(0,0,0,0.4);
     box-shadow: 0px 2px 3px 0px rgba(0,0,0,0.4);
 }
+nav {
+    position: absolute;
+    width: 100%;
+    height: 56px;
+    top: 0;
+    display: flex;
+    align-items: center;
 
+    -webkit-box-shadow: 0px 2px 3px 0px rgba(0,0,0,0.4);
+    -moz-box-shadow: 0px 2px 3px 0px rgba(0,0,0,0.4);
+    box-shadow: 0px 2px 3px 0px rgba(0,0,0,0.4);
+}
+.nav__title{
+    flex: 1;
+}
+.nav__brand{
+    margin: 0 15px;
+}
+.nav__brand__image{
+    height: 50px;
+    margin-top: 3px;
+    opacity: 0.5;
+}
+.nav__title{
+    font-weight: 600;
+    font-size: 18px;
+}
 .sort{
     display: flex;
     align-items: center;
     margin-top: 20px;
+}
+@media only screen and (max-width: 480px) {
+    .sort {
+        margin-top: 0;
+    }
 }
 .sort__formgroup{
     flex: 1;
@@ -251,15 +316,6 @@ nav .title {
     line-height: 55px;
     font-style: normal;
 }
-.sort__formgroup__icon__importance:before{
-    content: 'whatshot';
-}
-.sort__formgroup__icon__created:before{
-    content: 'playlist_add';
-}
-.sort__formgroup__icon__due:before{
-    content: 'event';
-}
 .nav--blue-steel, .list__fab--blue-steel{
     background-color: #0d47a1;
     color: white;
@@ -277,11 +333,18 @@ nav .title {
 .sort__formgroup__radio:checked + .sort__formgroup__label--blue-steel{
     border-bottom: 2px solid #0d47a1;
 }
+.list--default{
+    background-color: transparent;
+}
 .list__item__edit--blue-steel{
     border-color: rgba(255,255,255,0.16);
 }
 .nav--default, .list__fab--default{
     background-color: #fbc02d;
+    color: black;
+}
+.list__fab--default:hover{
+    background-color: #f9a825;
     color: black;
 }
 .body--default {
@@ -296,8 +359,19 @@ nav .title {
 .sort__formgroup__radio:checked + .sort__formgroup__label--default{
     border-bottom: 2px solid #fbc02d;
 }
-.list__item__edit--default{
+.list__item--default{
     border-bottom: 2px solid rgba(0,0,0,0.16);
+}
+.list--default{
+    background-color: transparent;
+}
+.editor__savebutton--default{
+    background: #5d4037;
+    color: white;
+}
+.editor__savebutton--default:hover{
+    background: #4e342e;
+    color: white;
 }
 
 /*Datepicker*/
@@ -311,18 +385,25 @@ nav .title {
 .c-datepicker__header-date span, .c-datepicker--show-calendar:after, .c-datepicker--show-time:after{
     color: black;
 }
-.nav--le-tigre{
-    background-color: red;
+.nav--le-tigre, .list__fab--le-tigre{
+    background-color: #886677;
+    color: white;
 }
 .body--le-tigre {
     background-color: white;
+    background-image: url('../img/teddy-kelley-65942-unsplash.jpg');
+    background-position: 50%;
+    background-size: cover;
 }
 .sort__formgroup__label--le-tigre{
     border-bottom: 1px solid #E4E4E4;
 }
 .sort__formgroup__radio:checked + .sort__formgroup__label--le-tigre{
-    border-bottom: 2px solid red;
+    border-bottom: 2px solid #886677;
 }
 .list__item__edit--le-tigre{
     border-color: #E4E4E4;
+}
+.list--le-tigre, .editor--le-tigre{
+    background-color: rgba(255, 255, 255, 0.53);
 }

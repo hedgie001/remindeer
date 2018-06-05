@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <title>Remindeer - Notes App</title>
+    <link rel="stylesheet" type="text/css" href="libs/material-datetime-picker.css">
+    <link rel="stylesheet" type="text/css" href="libs/rome.min.css">
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body class="body--default">
+    include "nav.html"
+<div class="grid-container">
+    <aside></aside>
+    <main class="content">
+        <div id="list-wrapper">
+            include "list.html"
+        </div>
+        <div id="editor-wrapper">
+            include "editor.html"
+        </div>
+    </main>
+    <aside></aside>
+</div>
+<script src="libs/moment-with-locales.min.js"></script>
+<script src="libs/mustache.min.js"></script>
+<script src="libs/rome.min.js"></script>
+<script src="libs/material-datetime-picker.js"></script>
+<script src="remindeer.js"></script>
+</body>
+</html>

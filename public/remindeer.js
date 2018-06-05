@@ -1,13 +1,9 @@
 document.addEventListener("DOMContentLoaded", function(event) {
-    moment.locale(document.documentElement.lang);
     new MainViewController();
-});
-
-
-
-;/**
+});;/**
  * Created by Hedgehog on 22.05.18.
  */
+
 function EditorViewController(mainController){
     let inputFields = document.getElementsByClassName("editor__formgroup");
     let currentNote = new Note();
@@ -66,7 +62,7 @@ function EditorViewController(mainController){
         } else {
             mainController.notesStorage.updateLocalNote(currentNote);
         }
-        mainController.init();
+        mainController.listView.update();
         this.show(false);
     };
     this.setForm = function(n){
@@ -84,7 +80,6 @@ function EditorViewController(mainController){
         updateDate(currentNote.date);
         updateImportanceIcons(currentNote.importance);
     };
-
     this.onFocus = function(label){
         label.classList.add("editor__formgroup__label--small");
         label.classList.add("editor__formgroup__label--animate");
@@ -147,29 +142,21 @@ function EditorViewController(mainController){
 };/**
  * Created by Hedgehog on 16.05.18.
  */
-function MainViewController(){
-    this.editor = new EditorViewController(this);
-    this.notesStorage = new NotesStorage(this);
-    this.theme = new Theme(this);
+function ListViewController(mainController){
 
     this.showDone = false;
     this.currentSort = "due";
 
     this.constructor = function(){
-        this.editor.show(false);
-
         //Event Listeners
         let self = this;
         document.getElementById("list__container").addEventListener('click', function (e) {
             let type = e.target.type;
-            if(type == "submit") self.editor.show(true, e.target.dataset.id);
+            if(type == "submit") mainController.editorView.show(true, e.target.dataset.id);
             if(type == "checkbox") self.activate(e.target.dataset.id, e.target);
         });
         document.getElementById("list__fab").addEventListener('click', function (e) {
-            self.editor.show(true);
-        });
-        document.getElementById("nav__themeselector").addEventListener('change', function (e) {
-            self.theme.onChange(e.target.value);
+            mainController.editorView.show(true);
         });
         document.getElementById("nav__showdone").addEventListener('change', function(e){
             self.setActives(e.target.checked);
@@ -177,33 +164,35 @@ function MainViewController(){
         document.getElementById('list-wrapper').addEventListener('change', function (e) {
             if(e.target.tagName.toLowerCase() === 'input' && e.target.type === 'radio') {
                 self.currentSort = e.target.value;
-                self.init();
+                self.update();
             }
         });
-        this.init();
+        this.update();
     };
 
-    this.init = function(){
+    this.update = function(){
         document.getElementById("sort__"+this.currentSort).checked = true;
-        this.notesStorage.getNotes(this.currentSort, this.showDone);
+        mainController.notesStorage.getNotes(this.currentSort, this.showDone);
         this.populateData();
     };
 
     this.populateData = function(){
         var output = "";
         let template = null;
-        if(this.notesStorage.notes.length > 0){
+        if(mainController.notesStorage.notes.length > 0){
             template = document.getElementById("list__item__template").innerHTML;
-            let theme = this.theme.currentTheme;
+            let importanceIconTemplate = document.getElementById("list__item__importance__icon__template").innerHTML;
+            let theme = mainController.theme.currentTheme;
 
             Mustache.parse(template);
+            Mustache.parse(importanceIconTemplate);
 
-            this.notesStorage.notes.forEach(function(elem, index){
+            mainController.notesStorage.notes.forEach(function(elem, index){
                 elem.dateFormatted = moment(elem.date).format('ll');
                 elem.importanceIcons = "";
                 elem.theme = theme;
                 for(var i=0;i<5;i++){
-                    elem.importanceIcons += "<i class=\"list__item__importance__icon "+(i<elem.importance ? "list__item__importance__icon--active" : "")+"\"></i>";
+                    elem.importanceIcons += Mustache.render(importanceIconTemplate, (i<elem.importance ? {active: true} : {active: false}));
                 }
                 output += Mustache.render(template, elem);
             });
@@ -214,21 +203,41 @@ function MainViewController(){
         document.getElementById('list__container').innerHTML = output;
     };
     this.activate = function(id, checkbox){
-        let note = this.notesStorage.getNoteById(id);
         let self = this;
+        let note = mainController.notesStorage.getNoteById(id);
         note.active = checkbox.checked;
-        this.notesStorage.updateLocalNote(note);
+        mainController.notesStorage.updateLocalNote(note);
         setTimeout(function(){
-            self.init();
+            self.update();
         }, 2500);
     };
     this.setActives = function(checked){
         this.showDone = checked;
-        this.init();
+        this.update();
     };
     this.constructor();
 }
 ;/**
+ * Created by Hedgehog on 05.06.18.
+ */
+function MainViewController(){
+    this.notesStorage = new NotesStorage();
+    this.theme = new Theme();
+
+    this.listView = new ListViewController(this);
+    this.editorView = new EditorViewController(this);
+
+    this.constructor = function(){
+        moment.locale(document.documentElement.lang);
+        this.editorView.show(false);
+
+        let self = this;
+        document.getElementById("nav__themeselector").addEventListener('change', function (e) {
+            self.theme.onChange(e.target.value);
+        });
+    };
+    this.constructor();
+};/**
  * Created by Hedgehog on 16.05.18.
  */
 function Note(){

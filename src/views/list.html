@@ -1,0 +1,23 @@
+<div class="list--default">
+    <div class="sort">
+        <div class="sort__formgroup sort__formgroup--default">
+            <input class="sort__formgroup__radio" type="radio" id="sort__due" name="sort" value="due" checked>
+            <label class="sort__formgroup__label sort__formgroup__label--default" for="sort__due"><i class="sort__formgroup__icon sort__formgroup__icon__due material-icons">event</i>Due</label>
+        </div>
+        <div class="sort__formgroup sort__formgroup--default">
+            <input class="sort__formgroup__radio" type="radio" id="sort__created" name="sort" value="created">
+            <label class="sort__formgroup__label sort__formgroup__label--default" for="sort__created"><i class="sort__formgroup__icon sort__formgroup__icon__created material-icons">playlist_add</i>Created</label>
+        </div>
+        <div class="sort__formgroup sort__formgroup--default">
+            <input class="sort__formgroup__radio" type="radio" id="sort__importance" name="sort" value="importance">
+            <label class="sort__formgroup__label sort__formgroup__label--default" for="sort__importance"><i class="sort__formgroup__icon sort__formgroup__icon__importance material-icons">whatshot</i>Importance</label>
+        </div>
+    </div>
+    <div class="list">
+
+        include "listItem.html"
+
+        <div id="list__container"></div>
+        <button id="list__fab" class="list__fab list__fab--default">+</button>
+    </div>
+</div>

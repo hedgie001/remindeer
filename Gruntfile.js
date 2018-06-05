@@ -7,28 +7,16 @@ module.exports = function(grunt) {
             assets: {
                 expand: true,
                 flatten: true,
-                src: ['src/assets/**'],
+                src: ['src/assets/images/**'],
                 dest: 'public/img/',
                 filter: 'isFile'
             },
             fonts: {
                 expand: true,
                 flatten: true,
-                src: ['src/fonts/**'],
+                src: ['src/assets/fonts/**'],
                 dest: 'public/fonts/',
                 filter: 'isFile'
-            },
-            style: {
-                expand: true,
-                flatten: true,
-                src: ['src/base.css'],
-                dest: 'public/'
-            },
-            html: {
-                expand: true,
-                flatten: true,
-                src: ['src/*.html'],
-                dest: 'public/'
             },
             mustache: {
                 expand: true,
@@ -60,13 +48,24 @@ module.exports = function(grunt) {
                 separator: ';'
             },
             dist: {
-                src: ['src/*.js', 'src/js/*.js'],
+                src: ['src/index.js','src/controllers/*.js', 'src/models/*.js'],
                 dest: 'public/<%= pkg.name %>.js'
             }
         },
+        includes: {
+            build: {
+                cwd: 'src/views',
+                src: ['*.html'],
+                dest: 'public/',
+                options: {
+                    flatten: true,
+                    includePath: 'src/views'
+                }
+            },
+        },
         concat_css: {
             all: {
-                src: ["src/css/*.css", "src/css/themes/*.css"],
+                src: ["src/assets/css/*.css", "src/assets/css/themes/*.css"],
                 dest: "public/css/styles.css"
             }
         },
@@ -93,12 +92,15 @@ module.exports = function(grunt) {
         },
         watch: {
             scripts: {
-                files: ['src/*.js', 'src/js/*.js', 'src/*.html','src/css/*.css', 'src/css/themes/*.css'],
-                tasks: ['copy', 'jshint', 'concat', 'concat_css'],
+                files: ['src/*.js', 'src/controllers/*.js', 'src/models/*.js', 'src/views/*.html','src/assets/css/*.css', 'src/assets/css/themes/*.css'],
+                tasks: ['copy', 'jshint', 'concat', 'concat_css', 'includes', 'clean'],
                 options: {
                     spawn: false,
                 },
             },
+        },
+        clean: {
+            html: ['public/*.html', '!public/index.html']
         },
         connect: {
             server: {
@@ -117,12 +119,13 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-includes');
     grunt.loadNpmTasks('grunt-concat-css');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-connect');
+    grunt.loadNpmTasks('grunt-contrib-clean');
 
     grunt.registerTask('test', ['jshint']);
-
-    grunt.registerTask('default', ['copy', 'jshint', 'concat', 'concat_css'], 'connect:server:keepalive');
+    grunt.registerTask('default', ['copy', 'jshint', 'concat', 'concat_css', 'includes', 'clean', 'connect:server:keepalive']);
 
 };

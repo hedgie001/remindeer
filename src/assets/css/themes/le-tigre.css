@@ -1,0 +1,22 @@
+.nav--le-tigre, .list__fab--le-tigre{
+    background-color: #886677;
+    color: white;
+}
+.body--le-tigre {
+    background-color: white;
+    background-image: url('../img/teddy-kelley-65942-unsplash.jpg');
+    background-position: 50%;
+    background-size: cover;
+}
+.sort__formgroup__label--le-tigre{
+    border-bottom: 1px solid #E4E4E4;
+}
+.sort__formgroup__radio:checked + .sort__formgroup__label--le-tigre{
+    border-bottom: 2px solid #886677;
+}
+.list__item__edit--le-tigre{
+    border-color: #E4E4E4;
+}
+.list--le-tigre, .editor--le-tigre{
+    background-color: rgba(255, 255, 255, 0.53);
+}

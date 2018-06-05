@@ -1,0 +1,46 @@
+.nav--default, .list__fab--default{
+    background-color: #fbc02d;
+    color: black;
+}
+.list__fab--default:hover{
+    background-color: #f9a825;
+    color: black;
+}
+.body--default {
+    background-color: white;
+}
+.sort__formgroup--default{
+    background: rgba(0,0,0,0.04);
+}
+.sort__formgroup__label--default{
+    border-bottom: 2px solid rgba(0,0,0,0.08);
+}
+.sort__formgroup__radio:checked + .sort__formgroup__label--default{
+    border-bottom: 2px solid #fbc02d;
+}
+.list__item--default{
+    border-bottom: 2px solid rgba(0,0,0,0.16);
+}
+.list--default{
+    background-color: transparent;
+}
+.editor__savebutton--default{
+    background: #5d4037;
+    color: white;
+}
+.editor__savebutton--default:hover{
+    background: #4e342e;
+    color: white;
+}
+
+/*Datepicker*/
+.c-datepicker__header-date{
+    background-color: #fbc02d;
+}
+.c-datepicker__header-day{
+    background-color: #f9a825;
+    color: black;
+}
+.c-datepicker__header-date span, .c-datepicker--show-calendar:after, .c-datepicker--show-time:after{
+    color: black;
+}

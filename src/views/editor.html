@@ -1,0 +1,32 @@
+<div class="editor editor--default">
+    <div class="editor__title">
+        <h1>Reminder</h1>
+    </div>
+    <form id="newNote" action="" name="newNote"  onsubmit="return false">
+        <div class="editor__formgroup">
+            <input class="editor__formgroup__input" type="text" name="title">
+            <label class="editor__formgroup__label">Title</label>
+        </div>
+        <div class="editor__formgroup">
+            <input name="description" class="editor__formgroup__input"></input>
+            <label class="editor__formgroup__label">Description</label>
+        </div>
+        <div class="editor__listgroup">
+            <label class="editor__listgroup__label">Importance</label>
+            <ul id="editor__listgroup__importanceselector" class="editor__listgroup__importanceselector">
+            </ul>
+            <script id="editor_listgroup__importanceselector__template" type="x-tmpl-mustache">
+                <li class="editor__listgroup__importanceselector_listitem"><a href="#" class="editor__listgroup__importanceselector__icon material-icons" data-index="{{index}}">whatshot</a></li>
+            </script>
+        </div>
+        <div class="editor__listgroup">
+            <label class="editor__listgroup__label">Date</label>
+            <div class="editor__listgroup__dateselector">
+                <div class="editor__listgroup__dateselector_value"></div>
+                <button class="editor__listgroup__dateselector_button">Cal</button>
+            </div>
+        </div>
+        <button type="button" id="editor__closebutton">Abbrechen</button>
+        <button type="submit" id="editor__savebutton" class="editor__savebutton--default" name="save">Speichern</button>
+    </form>
+</div>

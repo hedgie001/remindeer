@@ -1,0 +1,29 @@
+
+.grid-container {
+    display: grid;
+    grid-template-columns: 0 auto 0;
+}
+@media only screen and (min-width : 480px) {
+    .grid-container {
+        grid-template-columns: auto 480px auto;
+    }
+}
+@media only screen and (min-width : 768px) {
+    .grid-container {
+        grid-template-columns: auto 768px auto;
+    }
+}
+@media only screen and (min-width : 992px) {
+    .grid-container {
+        grid-template-columns: auto 730px auto;
+    }
+}
+.content {
+    margin-top: 56px;
+    padding-top: 56px;
+}
+@media only screen and (max-width: 480px) {
+    .content {
+        margin-top: 0;
+    }
+}
