@@ -26,7 +26,6 @@
 }
 .list__item__importance{
     text-align: right;
-    width: 120px;
 }
 .list__item__description{
     width: calc(100% - 48px);
@@ -39,9 +38,15 @@
     padding-bottom: 20px;
 }
 .list__item__importance__icon{
+    color: #676767;
     margin: 0 5px;
     font-size: 18px;
     opacity: 0.2;
+    font-style: normal;
+    font-family: "Material Icons";
+}
+.list__item__importance__icon:after{
+    content: 'whatshot';
 }
 .list__item__importance__icon--active{
     opacity: 1;

@@ -50,10 +50,16 @@
     list-style: none;
 }
 .editor__listgroup__importanceselector__icon{
+    color: #676767;
     font-size: 28px;
     margin: 0;
     padding: 0 5px;
     opacity: 0.2;
+    font-style: normal;
+    font-family: "Material Icons";
+}
+.editor__listgroup__importanceselector__icon:after{
+    content: 'whatshot';
 }
 .editor__listgroup__importanceselector__icon--active{
     opacity: 1;

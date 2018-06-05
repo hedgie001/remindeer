@@ -41,6 +41,18 @@ module.exports = function(grunt) {
                 flatten: true,
                 src: ['node_modules/moment/min/moment-with-locales.min.js'],
                 dest: 'public/libs/'
+            },
+            rome: {
+                expand: true,
+                flatten: true,
+                src: ['node_modules/rome/dist/rome.min.js', 'node_modules/rome/dist/rome.min.css'],
+                dest: 'public/libs/'
+            },
+            materialDatetimePicker: {
+                expand: true,
+                flatten: true,
+                src: ['node_modules/material-datetime-picker/dist/material-datetime-picker.js', 'node_modules/material-datetime-picker/dist/material-datetime-picker.css'],
+                dest: 'public/libs/'
             }
         },
         concat: {

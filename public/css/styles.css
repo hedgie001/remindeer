@@ -89,10 +89,16 @@ a {
     list-style: none;
 }
 .editor__listgroup__importanceselector__icon{
+    color: #676767;
     font-size: 28px;
     margin: 0;
     padding: 0 5px;
     opacity: 0.2;
+    font-style: normal;
+    font-family: "Material Icons";
+}
+.editor__listgroup__importanceselector__icon:after{
+    content: 'whatshot';
 }
 .editor__listgroup__importanceselector__icon--active{
     opacity: 1;
@@ -163,7 +169,6 @@ nav .title {
 }
 .list__item__importance{
     text-align: right;
-    width: 120px;
 }
 .list__item__description{
     width: calc(100% - 48px);
@@ -176,9 +181,15 @@ nav .title {
     padding-bottom: 20px;
 }
 .list__item__importance__icon{
+    color: #676767;
     margin: 0 5px;
     font-size: 18px;
     opacity: 0.2;
+    font-style: normal;
+    font-family: "Material Icons";
+}
+.list__item__importance__icon:after{
+    content: 'whatshot';
 }
 .list__item__importance__icon--active{
     opacity: 1;
@@ -209,7 +220,7 @@ nav .title {
     flex: 1;
     text-align: center;
     position: relative;
-    height: 50px;
+    height: 68px;
 }
 .sort__formgroup__radio{
     -webkit-appearance:none;
@@ -221,11 +232,33 @@ nav .title {
     left: 0;
     width: 100%;
     height: 100%;
+    font-size: 11px;
     line-height: 60px;
+    padding-top: 20px;
     cursor: pointer;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
+}
+.sort__formgroup__icon{
+    font-family: "Material Icons";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 50px;
+    margin-left: -25px;
+    font-size: 24px;
+    line-height: 55px;
+    font-style: normal;
+}
+.sort__formgroup__icon__importance:before{
+    content: 'whatshot';
+}
+.sort__formgroup__icon__created:before{
+    content: 'playlist_add';
+}
+.sort__formgroup__icon__due:before{
+    content: 'event';
 }
 .nav--blue-steel, .list__fab--blue-steel{
     background-color: #0d47a1;
@@ -265,6 +298,18 @@ nav .title {
 }
 .list__item__edit--default{
     border-bottom: 2px solid rgba(0,0,0,0.16);
+}
+
+/*Datepicker*/
+.c-datepicker__header-date{
+    background-color: #fbc02d;
+}
+.c-datepicker__header-day{
+    background-color: #f9a825;
+    color: black;
+}
+.c-datepicker__header-date span, .c-datepicker--show-calendar:after, .c-datepicker--show-time:after{
+    color: black;
 }
 .nav--le-tigre{
     background-color: red;

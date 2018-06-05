@@ -3,6 +3,9 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <title>Remindeer - Notes App</title>
+    <link rel="stylesheet" type="text/css" href="libs/material-datetime-picker.css">
+    <link rel="stylesheet" type="text/css" href="libs/rome.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="css/styles.css">
 </head>
 <body class="body--default">
@@ -11,7 +14,7 @@
             logo
         </div>
         <div class="title nav-title">
-            Remindeer
+            Remindeer2
         </div>
         <div>
             <input type="checkbox" id="nav__showdone">
@@ -30,15 +33,15 @@
                 <div class="sort">
                     <div class="sort__formgroup sort__formgroup--default">
                         <input class="sort__formgroup__radio" type="radio" id="sort__due" name="sort" value="due" checked>
-                        <label class="sort__formgroup__label sort__formgroup__label--default" for="sort__due">Due</label>
+                        <label class="sort__formgroup__label sort__formgroup__label--default" for="sort__due"><i class="sort__formgroup__icon sort__formgroup__icon__due"></i>Due</label>
                     </div>
                     <div class="sort__formgroup sort__formgroup--default">
                         <input class="sort__formgroup__radio" type="radio" id="sort__created" name="sort" value="created">
-                        <label class="sort__formgroup__label sort__formgroup__label--default" for="sort__created">Created</label>
+                        <label class="sort__formgroup__label sort__formgroup__label--default" for="sort__created"><i class="sort__formgroup__icon sort__formgroup__icon__created"></i>Created</label>
                     </div>
                     <div class="sort__formgroup sort__formgroup--default">
                         <input class="sort__formgroup__radio" type="radio" id="sort__importance" name="sort" value="importance">
-                        <label class="sort__formgroup__label sort__formgroup__label--default" for="sort__importance">Importance</label>
+                        <label class="sort__formgroup__label sort__formgroup__label--default" for="sort__importance"><i class="sort__formgroup__icon sort__formgroup__icon__importance"></i>Importance</label>
                     </div>
                 </div>
                 <div class="list">
@@ -61,7 +64,7 @@
                         </div>
                     </script>
                     <script id="list__nodata__template" type="x-tmpl-mustache">
-                        Keine Daten
+                        Keine offenen Remindeers!
                     </script>
                     <script id="list__loading__template" type="x-tmpl-mustache">
                         Laden...
@@ -89,13 +92,14 @@
                             <ul id="editor__listgroup__importanceselector" class="editor__listgroup__importanceselector">
                             </ul>
                             <script id="editor_listgroup__importanceselector__template" type="x-tmpl-mustache">
-                                <li class="editor__listgroup__importanceselector_listitem"><a href="#" class="editor__listgroup__importanceselector__icon" data-index="{{index}}">•</a></li>
+                                <li class="editor__listgroup__importanceselector_listitem"><a href="#" class="editor__listgroup__importanceselector__icon" data-index="{{index}}"></a></li>
                             </script>
                         </div>
                         <div class="editor__listgroup">
                             <label class="editor__listgroup__label">Date</label>
                             <div class="editor__listgroup__dateselector">
-                                <input type="date" name="date">
+                                <div class="editor__listgroup__dateselector_value"></div>
+                                <button class="editor__listgroup__dateselector_button">Cal</button>
                             </div>
                         </div>
                         <button type="button" id="editor__closebutton">abbrechen</button>
@@ -108,6 +112,8 @@
     </div>
     <script src="libs/moment-with-locales.min.js"></script>
     <script src="libs/mustache.min.js"></script>
+    <script src="libs/rome.min.js"></script>
+    <script src="libs/material-datetime-picker.js"></script>
     <script src="remindeer.js"></script>
 </body>
 </html>

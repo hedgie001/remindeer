@@ -17,3 +17,15 @@
 .list__item__edit--default{
     border-bottom: 2px solid rgba(0,0,0,0.16);
 }
+
+/*Datepicker*/
+.c-datepicker__header-date{
+    background-color: #fbc02d;
+}
+.c-datepicker__header-day{
+    background-color: #f9a825;
+    color: black;
+}
+.c-datepicker__header-date span, .c-datepicker--show-calendar:after, .c-datepicker--show-time:after{
+    color: black;
+}
