@@ -2,7 +2,7 @@
 A single page reminder/notes web Application. Project for CAS Front End Engineering 2018 at Hochschule für Technik Rapperswil (https://www.hsr.ch).
 
 ## Working Demo (pre release)
-https://cdn.rawgit.com/hedgie001/remindeer/alpha/public/index.html
+https://cdn.rawgit.com/hedgie001/remindeer/alpha-2/public/index.html
 
 ## Features
 * No jQuery
