@@ -150,6 +150,11 @@ button:hover{
 .editor__listgroup__importanceselector__icon--active{
     opacity: 1;
 }
+.editor__listgroup__dateselector_button{
+    width: 56px;
+    margin-left: 10px;
+    padding: 0;
+}
 .grid-container {
     display: grid;
     grid-template-columns: 0 auto 0;
@@ -172,6 +177,7 @@ button:hover{
 .content {
     margin-top: 56px;
     padding-top: 56px;
+    margin-bottom: 56px;
 }
 @media only screen and (max-width: 480px) {
     .content {
@@ -234,9 +240,8 @@ button:hover{
     width: 56px;
     height: 56px;
     border-radius: 50%;
-    font-size: 26px;
-    line-height: 26px;
-    padding-bottom: 4px;
+    line-height: 0;
+    padding: 0;
     border: none;
     opacity: 1;
     cursor: pointer;

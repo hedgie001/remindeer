@@ -63,3 +63,8 @@
 .editor__listgroup__importanceselector__icon--active{
     opacity: 1;
 }
+.editor__listgroup__dateselector_button{
+    width: 56px;
+    margin-left: 10px;
+    padding: 0;
+}

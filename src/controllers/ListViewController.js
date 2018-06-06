@@ -31,29 +31,28 @@ function ListViewController(mainController){
 
     this.update = function(){
         document.getElementById("sort__"+this.currentSort).checked = true;
-        mainController.notesStorage.getNotes(this.currentSort, this.showDone);
-        this.populateData();
+        this.populateData(mainController.notesStorage.getNotes(this.currentSort, this.showDone));
     };
 
-    this.populateData = function(){
+    this.populateData = function(notes){
         var output = "";
         let template = null;
-        if(mainController.notesStorage.notes.length > 0){
+        if(notes.length > 0){
             template = document.getElementById("list__item__template").innerHTML;
             let importanceIconTemplate = document.getElementById("list__item__importance__icon__template").innerHTML;
-            let theme = mainController.theme.currentTheme;
 
             Mustache.parse(template);
             Mustache.parse(importanceIconTemplate);
 
-            mainController.notesStorage.notes.forEach(function(elem, index){
-                elem.dateFormatted = moment(elem.date).format('ll');
-                elem.importanceIcons = "";
-                elem.theme = theme;
+            notes.forEach(function(elem, index){
+                let itemData = Object.assign({}, elem);
+                itemData.dateFormatted = moment(elem.date).format('ll');
+                itemData.theme = mainController.theme.currentTheme;
+                itemData.importanceIcons = "";
                 for(var i=0;i<5;i++){
-                    elem.importanceIcons += Mustache.render(importanceIconTemplate, (i<elem.importance ? {active: true} : {active: false}));
+                    itemData.importanceIcons += Mustache.render(importanceIconTemplate, (i<itemData.importance ? {active: true} : {active: false}));
                 }
-                output += Mustache.render(template, elem);
+                output += Mustache.render(template, itemData);
             });
         } else {
             template = document.getElementById("list__nodata__template").innerHTML;

@@ -61,7 +61,7 @@
                                 <p>{{description}}</p>
                             </div>
                             <div class="list__item__edit">
-                                <button class="list__item__edit_button--{{theme}}" type="submit" data-id='{{id}}'>edit</button>
+                                <button class="list__item__edit_button--{{theme}}" type="submit" data-id='{{id}}'>Edit</button>
                             </div>
                         </div>
                     </script>
@@ -76,7 +76,7 @@
                     </script>
 
                     <div id="list__container"></div>
-                    <button id="list__fab" class="list__fab list__fab--default">+</button>
+                    <button id="list__fab" class="list__fab list__fab--default"><i class="material-icons">add</i></button>
                 </div>
             </div>
         </div>
@@ -104,13 +104,11 @@
                     </div>
                     <div class="editor__listgroup">
                         <label class="editor__listgroup__label">Date</label>
-                        <div class="editor__listgroup__dateselector">
-                            <div class="editor__listgroup__dateselector_value"></div>
-                            <button class="editor__listgroup__dateselector_button">Cal</button>
-                        </div>
+                        <div class="editor__listgroup__dateselector_value"></div>
+                        <button class="editor__listgroup__dateselector_button material-icons">event</button>
                     </div>
-                    <button type="button" id="editor__closebutton">Abbrechen</button>
-                    <button type="submit" id="editor__savebutton" class="editor__savebutton--default" name="save">Speichern</button>
+                    <button type="submit" id="editor__savebutton" class="editor__savebutton--default" name="save">Save</button>
+                    <button type="button" id="editor__closebutton">Cancel</button>
                 </form>
             </div>
         </div>

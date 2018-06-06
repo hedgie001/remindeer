@@ -54,9 +54,8 @@
     width: 56px;
     height: 56px;
     border-radius: 50%;
-    font-size: 26px;
-    line-height: 26px;
-    padding-bottom: 4px;
+    line-height: 0;
+    padding: 0;
     border: none;
     opacity: 1;
     cursor: pointer;
