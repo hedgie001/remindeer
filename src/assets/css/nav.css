@@ -25,3 +25,59 @@ nav {
     font-weight: 600;
     font-size: 18px;
 }
+.nav__tools{
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+}
+.nav__tools__showdone{
+    padding-top: 20px;
+    margin-right: 15px;
+}
+.nav__tools__showdone__label{
+    font-size: 11px;
+    position: relative;
+    cursor: pointer;
+}
+.nav__tools__showdone__icon{
+    position: absolute;
+    top: 0;
+    opacity: 0.5;
+    left: 50%;
+    width: 40px;
+    margin-left: -20px;
+    margin-top: -21px;
+    text-align: center;
+}
+.nav__tools__showdone__icon:after {
+    content: 'visibility_off';
+}
+
+.nav__tools__showdone__input:checked ~ .nav__tools__showdone__icon {
+    opacity: 1;
+}
+.nav__tools__showdone__input:checked ~ .nav__tools__showdone__icon:after {
+    content: 'visibility';
+}
+.nav__tools__showdone__input{
+    opacity: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+.nav__tools__themeselector{
+    margin-right: 15px;
+}
+.nav__tools__themeselector__select{
+    font-size: 14px;
+    width: 110px;
+    background: #ffffff6e;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    padding: 8px;
+    background-image: url(../img/chevron.svg);
+    background-size: 15px;
+    background-repeat: no-repeat;
+    background-position: calc(100% - 10px) 50%;
+}

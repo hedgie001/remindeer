@@ -1,7 +1,10 @@
 <script id="list__item__template" type="x-tmpl-mustache">
     <div class="list__item list__item--{{theme}}" id="list__item__id__{{id}}" data-id="{{id}}">
         <div class="list__item__checkbox">
-            <input type="checkbox" data-id="{{id}}" {{#active}}checked{{/active}}>
+            <label class="list__item__checkbox__label">
+                <input type="checkbox" class="list__item__checkbox__input" data-id="{{id}}" {{#active}}checked{{/active}}>
+                <i class="list__item__checkbox__icon material-icons"></i>
+            </label>
         </div>
         <div class="list__item__title">
             <h3 class="list__item__title__date">{{dateFormatted}}</h3>

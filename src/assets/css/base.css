@@ -71,7 +71,7 @@ p{
 a {
     text-decoration: none;
 }
-button{
+button, select{
     border: none;
     font-size: 16px;
     opacity: 0.6;
@@ -84,4 +84,7 @@ button:hover{
     opacity: 1;
     background: rgba(0,0,0,0.08);
     color: black;
+}
+button:focus, select:focus, input:focus{
+    outline: none;
 }
