@@ -199,16 +199,29 @@ function ListViewController(mainController){
             template = document.getElementById("list__nodata__template").innerHTML;
             output = Mustache.render(template);
         }
+
         document.getElementById('list__container').innerHTML = output;
+
+        let overlays = document.getElementsByClassName('list__item__overlay');
+        [...overlays].forEach(function(elem) {
+            elem.style.display = "none";
+        });
     };
     this.activate = function(id, checkbox){
+        let elem = document.getElementById("list__item__id__"+id);
+        elem.style.height = (elem.clientHeight-30)+"px";
+        elem.querySelector('.list__item__overlay').style.display = "flex";
         let self = this;
         let note = mainController.notesStorage.getNoteById(id);
         note.active = checkbox.checked;
         mainController.notesStorage.updateLocalNote(note);
         setTimeout(function(){
-            self.update();
-        }, 2500);
+            if(!self.showDone){
+                elem.classList.add("list__item--fadeout");
+                elem.style.height = "0px";
+            }
+            else self.update();
+        }, 500+(Math.random()*1000));
     };
     this.setActives = function(checked){
         this.showDone = checked;

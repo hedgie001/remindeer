@@ -10,6 +10,17 @@
     align-items: center;
     padding: 30px 15px 0 15px;
     border-bottom: 1px solid grey;
+    position: relative;
+    opacity: 1;
+    overflow: hidden;
+    transition: all 0.2s ease-out;
+    margin-left: 0;
+}
+.list__item--fadeout{
+    height:0;
+    padding: 0 15px;
+    opacity: 0;
+    margin-left: 100%;
 }
 .list__item__checkbox{
     width: 48px;
@@ -72,7 +83,7 @@
     cursor: pointer;
 }
 .list__item__checkbox__input{
-    opacity: 0  ;
+    opacity: 0;
     position: absolute;
     right: 0;
     top: 0;
@@ -80,10 +91,9 @@
 .list__item__checkbox__icon{
     position: absolute;
     opacity: 0.5;
-    left: 50%;
+    left: 0;
     width: 40px;
-    margin-left: -20px;
-    text-align: center;
+    text-align: left;
     font-size: 28px;
 }
 .list__item__checkbox__icon:after{
@@ -94,4 +104,19 @@
 }
 .list__item__checkbox__input:checked ~ .list__item__checkbox__icon:after {
     content: 'check_box';
+}
+.list__item__overlay{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.list__item__overlay_spinner{
+    width: 80px;
+    height: 80px;
 }
