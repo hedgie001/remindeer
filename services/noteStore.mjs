@@ -34,9 +34,7 @@ export class NoteStore {
     }
 
     async all(showAll = true) {
-        let query = {};
-        if(!showAll) query = {"status" : "UNDONE"};
-        return await this.db.find(query);
+        return await this.db.find(!showAll ? {"status" : "UNDONE"} : {});
     }
 }
 

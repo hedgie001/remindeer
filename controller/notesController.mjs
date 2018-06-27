@@ -2,8 +2,7 @@ import {noteStore} from '../services/noteStore'
 
 export class OrdersController {
     async getNotes(req, res) {
-        let all = (req.query.showAll === 'true' ? true : false);
-        res.json((await noteStore.all(all) || []))
+        res.json(await noteStore.all(req.query.showAll === 'true' ? true : false) || [])
     };
 
     async createNote(req, res) {

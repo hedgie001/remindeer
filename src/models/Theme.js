@@ -12,8 +12,7 @@ function Theme(mainController){
         let changeClassTheme = function(classContent){
             return classContent.replace("--"+oldTheme, "--"+newTheme);
         };
-        let allNodes = document.querySelectorAll('*');
-        allNodes.forEach(function(node) {
+        document.querySelectorAll('*').forEach(function(node) {
             let classContent = node.getAttribute("class");
             if(classContent){
                 node.setAttribute("class", changeClassTheme(classContent));

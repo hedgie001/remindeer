@@ -3,31 +3,65 @@
  */
 
 function EditorViewController(mainController){
-    let inputFields = document.getElementsByClassName("editor__formgroup");
-    let currentNote = new Note();
+    this.currentNote = new Note();
 
     this.constructor = function(){
         //Event Listeners
         let self = this;
         document.getElementById("editor__closebutton").addEventListener('click', function (e) {
             self.show(false);
-        });
+        }); //Click on Close
         document.getElementById("editor__savebutton").addEventListener('click', function (e) {
             self.submit();
-        });
+        }); //Click on Save
+
+
+        let inputFields = document.getElementsByClassName("editor__formgroup");
+        for (let item of inputFields) {
+            let inputField = item.getElementsByClassName("editor__formgroup__input")[0];
+            let labelField = item.getElementsByClassName("editor__formgroup__label")[0];
+            if (inputField && labelField){
+                inputField.forLabel = labelField;
+                inputField.addEventListener('focus', this.onFocus.bind(this, labelField));
+                inputField.addEventListener('blur', this.onBlur.bind(this, labelField));
+            }
+        } // Focus and Blur events for Input Fields
+
+        let importanceListItemTemplate = document.getElementById("editor_listgroup__importanceselector__template").innerHTML;
+        Mustache.parse(importanceListItemTemplate);
+        let importanceListItems = "";
+        for(let i=0;i<5;i++){
+            let icon ={
+                index: i
+            };
+            importanceListItems += Mustache.render(importanceListItemTemplate,icon);
+        }
+        document.getElementById('editor__listgroup__importanceselector').innerHTML = importanceListItems;
+
         let editorImportanceIcons = document.getElementsByClassName("editor__listgroup__importanceselector_listitem");
         for (let icon of editorImportanceIcons) {
             let anchor = icon.getElementsByTagName("a")[0];
             anchor.addEventListener('mouseover', self.editorImportanceIconOver.bind(this));
             anchor.addEventListener('mouseout', self.editorImportanceIconOut.bind(this));
             anchor.addEventListener('click', self.editorImportanceIconClick.bind(this));
-        }
+        } //Click and Hover Importance Buttons
+
+        let picker = new MaterialDatetimePicker()
+            .on('submit', function(val) {
+                this.currentNote.date = val.valueOf();
+                this.updateDate();
+            });
+        document.querySelector('.editor__listgroup__dateselector_button').addEventListener('click', function(){
+            picker.open();
+        });
+
     };
 
-    let updateDate = function(n){
-        document.querySelector(".editor__listgroup__dateselector_value").innerHTML = moment(n).format('ll');
+    this.updateDate = function(){
+        document.querySelector(".editor__listgroup__dateselector_value").innerHTML = moment(this.currentNote.date).format('ll');
     };
-    this.show = function(state, elementId = null){
+
+    this.show = function(state, noteID = null){
         function HideElementById(selector){
             document.getElementById(selector).style.display = "none";
         }
@@ -37,17 +71,15 @@ function EditorViewController(mainController){
         if(state){
             HideElementById("list-wrapper");
             ShowElementById("editor-wrapper");
-            let currentNote = null;
             let self = this;
-            if(elementId){
-                mainController.notesStorage.getNoteById(elementId, function (note) {
-                    currentNote = note;
-                    self.setForm(currentNote);
+            if(noteID){
+                mainController.notesStorage.getNoteById(noteID, function (note) {
+                    self.setForm(note);
                 });
             } else {
-                currentNote = new Note();
-                currentNote.date = new Date().getTime();
-                self.setForm(currentNote);
+                let newNote = new Note();
+                newNote.date = new Date().getTime();
+                self.setForm(newNote);
             }
         } else {
             ShowElementById("list-wrapper");
@@ -58,32 +90,33 @@ function EditorViewController(mainController){
     this.submit = function(){
         let self = this;
         let form = document.forms.newNote;
-        currentNote.title = form.title.value;
-        currentNote.description = form.description.value;
-        if(currentNote._id == null){
-            mainController.notesStorage.addServerNote(currentNote, done);
+        let note = this.currentNote;
+        note.title = form.title.value;
+        note.description = form.description.value;
+        if(note._id == null){
+            mainController.notesStorage.addNote(note, done);
         } else {
-            mainController.notesStorage.updateServerNote(currentNote, done);
+            mainController.notesStorage.updateNote(note, done);
         }
         function done(){
             mainController.listView.update();
             self.show(false);
         }
     };
-    this.setForm = function(n){
+    this.setForm = function(note){
         let checkLabelClasses = function(label){
             if(label.value != "") label.forLabel.classList.add("editor__formgroup__label--small");
             else label.forLabel.classList.remove("editor__formgroup__label--small");
         };
-        currentNote = n;
+        this.currentNote = note;
         let form = document.forms.newNote;
-        form.title.value = n.title;
+        form.title.value = note.title;
         checkLabelClasses(form.title);
-        form.description.value = n.description;
+        form.description.value = note.description;
         checkLabelClasses(form.description);
 
-        updateDate(currentNote.date);
-        updateImportanceIcons(currentNote.importance);
+        this.updateDate();
+        this.updateImportanceIcons();
     };
     this.onFocus = function(label){
         label.classList.add("editor__formgroup__label--small");
@@ -94,30 +127,11 @@ function EditorViewController(mainController){
             label.classList.remove("editor__formgroup__label--small");
         }
     };
-    for (let item of inputFields) {
-        let inputField = item.getElementsByClassName("editor__formgroup__input")[0];
-        let labelField = item.getElementsByClassName("editor__formgroup__label")[0];
-        if (inputField && labelField){
-            inputField.forLabel = labelField;
-            inputField.addEventListener('focus', this.onFocus.bind(this, labelField));
-            inputField.addEventListener('blur', this.onBlur.bind(this, labelField));
-        }
-    }
 
-    let importanceListItemTemplate = document.getElementById("editor_listgroup__importanceselector__template").innerHTML;
-    Mustache.parse(importanceListItemTemplate);
-    let importanceListItems = "";
-    for(var i=0;i<5;i++){
-        let icon ={
-            index: i
-        };
-        importanceListItems += Mustache.render(importanceListItemTemplate,icon);
-    }
-    document.getElementById('editor__listgroup__importanceselector').innerHTML = importanceListItems;
-    let editorImportanceIcons = document.getElementsByClassName("editor__listgroup__importanceselector__icon");
-    let updateImportanceIcons = function(value = 1){
+    this.updateImportanceIcons = function(){
+        let editorImportanceIcons = document.getElementsByClassName("editor__listgroup__importanceselector__icon");
         for (let icon of editorImportanceIcons){
-            if(icon.dataset.index < value) {
+            if(icon.dataset.index < this.currentNote.importance) {
                 icon.classList.add("editor__listgroup__importanceselector__icon--active");
             } else {
                 icon.classList.remove("editor__listgroup__importanceselector__icon--active");
@@ -125,23 +139,15 @@ function EditorViewController(mainController){
         }
     };
     this.editorImportanceIconClick = function(e){
-        currentNote.importance = parseInt(e.target.dataset.index) + 1;
-        updateImportanceIcons(currentNote.importance);
+        this.currentNote.importance = parseInt(e.target.dataset.index) + 1;
+        this.updateImportanceIcons();
     };
     this.editorImportanceIconOver = function(e){
-        updateImportanceIcons(parseInt(e.target.dataset.index) + 1);
+        this.currentNote.importance = parseInt(e.target.dataset.index) + 1;
+        this.updateImportanceIcons();
     };
     this.editorImportanceIconOut = function(e){
-        updateImportanceIcons(currentNote.importance);
+        this.updateImportanceIcons();
     };
-
-    let picker = new MaterialDatetimePicker()
-    .on('submit', function(val) {
-        currentNote.date = val.valueOf();
-        updateDate(currentNote.date);
-    });
-    document.querySelector('.editor__listgroup__dateselector_button').addEventListener('click', function(){
-        picker.open();
-    });
     this.constructor();
 }
