@@ -61,9 +61,9 @@ function EditorViewController(mainController){
         currentNote.title = form.title.value;
         currentNote.description = form.description.value;
         if(currentNote._id == null){
-            mainController.notesStorage.addServerNote(currentNote, done());
+            mainController.notesStorage.addServerNote(currentNote, done);
         } else {
-            mainController.notesStorage.updateServerNote(currentNote, done());
+            mainController.notesStorage.updateServerNote(currentNote, done);
         }
         function done(){
             mainController.listView.update();

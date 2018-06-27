@@ -24,9 +24,10 @@ https://cdn.rawgit.com/hedgie001/remindeer/beta-1/public/index.html
 npm i
 grunt
 npm start
+surf http://127.0.0.1:3001/
 ```
 
-### Fordevelopement
+### For developement
 ```
 gunt watch
 ```

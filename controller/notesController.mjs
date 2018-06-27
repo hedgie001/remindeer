@@ -1,8 +1,9 @@
 import {noteStore} from '../services/noteStore'
 
 export class OrdersController {
-    async getOrders(req, res) {
-        res.json((await noteStore.all(req) || []))
+    async getNotes(req, res) {
+        let all = (req.query.showAll === 'true' ? true : false);
+        res.json((await noteStore.all(all) || []))
     };
 
     async createNote(req, res) {
@@ -20,7 +21,7 @@ export class OrdersController {
 
     async updateNote(req, res) {
         let note = req.body;
-        res.json(await noteStore.update(req.params.id, note.title, note.description, note.date, note.importance));
+        res.json(await noteStore.update(req.params.id, note.title, note.description, note.date, note.importance, note.status));
     };
 }
 

@@ -26,7 +26,7 @@ function NotesStorage(mainController){
 
     this.getServerNotes = function(showActive, callback){
         let notes = [];
-        fetch('/notes').then(function(response){
+        fetch('/notes?showAll='+String(showActive)).then(function(response){
             return response.json();
         }).then(function(newNotes){
             newNotes.forEach(function(elem, index){

@@ -63,9 +63,9 @@ function EditorViewController(mainController){
         currentNote.title = form.title.value;
         currentNote.description = form.description.value;
         if(currentNote._id == null){
-            mainController.notesStorage.addServerNote(currentNote, done());
+            mainController.notesStorage.addServerNote(currentNote, done);
         } else {
-            mainController.notesStorage.updateServerNote(currentNote, done());
+            mainController.notesStorage.updateServerNote(currentNote, done);
         }
         function done(){
             mainController.listView.update();
@@ -197,12 +197,13 @@ function ListViewController(mainController){
             Mustache.parse(importanceIconTemplate);
 
             notes.forEach(function(elem, index){
-                console.log(elem);
+                // console.log(elem);
                 let itemData = Object.assign({}, elem);
                 itemData.dateFormatted = moment(elem.date).format('ll');
                 itemData.theme = mainController.theme.currentTheme;
                 itemData.importanceIcons = "";
                 itemData._id = elem._id;
+                itemData.checked = (elem.status === "DONE" ? true : false);
                 for(var i=0;i<5;i++){
                     itemData.importanceIcons += Mustache.render(importanceIconTemplate, (i<itemData.importance ? {active: true} : {active: false}));
                 }
@@ -225,16 +226,17 @@ function ListViewController(mainController){
         elem.style.height = (elem.clientHeight-30)+"px";
         elem.querySelector('.list__item__overlay').style.display = "flex";
         let self = this;
-        let note = mainController.notesStorage.getNoteById(id);
-        note.active = checkbox.checked;
-        mainController.notesStorage.updateLocalNote(note);
-        setTimeout(function(){
-            if(!self.showDone){
-                elem.classList.add("list__item--fadeout");
-                elem.style.height = "0px";
-            }
-            else self.update();
-        }, 500+(Math.random()*1000));
+        mainController.notesStorage.getNoteById(id, function (note) {
+            note.status = checkbox.checked ? "DONE" : "UNDONE";
+            mainController.notesStorage.updateServerNote(note, function (){
+                if(!self.showDone){
+                    elem.classList.add("list__item--fadeout");
+                    elem.style.height = "0px";
+                }
+                else self.update();
+            });
+        });
+
     };
     this.setActives = function(checked){
         this.showDone = checked;
@@ -272,7 +274,7 @@ function Note(){
     this.date = null;
     this.created = new Date().getTime();
     this.importance = 1;
-    this.status = "OK";
+    this.status = "UNDONE";
 
     this.update = function(data){
         if(data._id) this._id = data._id;
@@ -311,7 +313,7 @@ function NotesStorage(mainController){
 
     this.getServerNotes = function(showActive, callback){
         let notes = [];
-        fetch('/notes').then(function(response){
+        fetch('/notes?showAll='+String(showActive)).then(function(response){
             return response.json();
         }).then(function(newNotes){
             newNotes.forEach(function(elem, index){

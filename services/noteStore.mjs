@@ -7,7 +7,7 @@ export class Note {
         this.date = date;
         this.created = new Date();
         this.importance = importance;
-        this.state = "OK";
+        this.status = "UNDONE";
     }
 }
 
@@ -20,14 +20,12 @@ export class NoteStore {
         let note = new Note(title, description, date, importance);
         return await this.db.insert(note);
     }
-    async update(id, title, description, date, importance) {
-        console.log("UPDATE");
-        console.log(id, title, description, date, importance);
-        return await this.db.update({_id: id}, { $set: { title: title, description: description, importance: importance, date: date } });
+    async update(id, title, description, date, importance, status) {
+        return await this.db.update({_id: id}, { $set: { title: title, description: description, importance: importance, date: date, status: status } });
     }
 
     async delete(id) {
-        await this.db.update({_id: id}, {$set: {"state": "DELETED"}});
+        await this.db.update({_id: id}, {$set: {"status": "DELETE"}});
         return await this.get(id);
     }
 
@@ -35,8 +33,10 @@ export class NoteStore {
         return await this.db.findOne({_id: id});
     }
 
-    async all() {
-        return await this.db.cfind().sort({ orderDate: -1 }).exec();
+    async all(showAll = true) {
+        let query = {};
+        if(!showAll) query = {"status" : "UNDONE"};
+        return await this.db.find(query);
     }
 }
 

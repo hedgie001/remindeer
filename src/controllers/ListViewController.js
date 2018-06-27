@@ -49,12 +49,13 @@ function ListViewController(mainController){
             Mustache.parse(importanceIconTemplate);
 
             notes.forEach(function(elem, index){
-                console.log(elem);
+                // console.log(elem);
                 let itemData = Object.assign({}, elem);
                 itemData.dateFormatted = moment(elem.date).format('ll');
                 itemData.theme = mainController.theme.currentTheme;
                 itemData.importanceIcons = "";
                 itemData._id = elem._id;
+                itemData.checked = (elem.status === "DONE" ? true : false);
                 for(var i=0;i<5;i++){
                     itemData.importanceIcons += Mustache.render(importanceIconTemplate, (i<itemData.importance ? {active: true} : {active: false}));
                 }
@@ -77,16 +78,17 @@ function ListViewController(mainController){
         elem.style.height = (elem.clientHeight-30)+"px";
         elem.querySelector('.list__item__overlay').style.display = "flex";
         let self = this;
-        let note = mainController.notesStorage.getNoteById(id);
-        note.active = checkbox.checked;
-        mainController.notesStorage.updateLocalNote(note);
-        setTimeout(function(){
-            if(!self.showDone){
-                elem.classList.add("list__item--fadeout");
-                elem.style.height = "0px";
-            }
-            else self.update();
-        }, 500+(Math.random()*1000));
+        mainController.notesStorage.getNoteById(id, function (note) {
+            note.status = checkbox.checked ? "DONE" : "UNDONE";
+            mainController.notesStorage.updateServerNote(note, function (){
+                if(!self.showDone){
+                    elem.classList.add("list__item--fadeout");
+                    elem.style.height = "0px";
+                }
+                else self.update();
+            });
+        });
+
     };
     this.setActives = function(checked){
         this.showDone = checked;

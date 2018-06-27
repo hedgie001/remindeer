@@ -8,7 +8,7 @@ function Note(){
     this.date = null;
     this.created = new Date().getTime();
     this.importance = 1;
-    this.status = "OK";
+    this.status = "UNDONE";
 
     this.update = function(data){
         if(data._id) this._id = data._id;
