@@ -5,31 +5,65 @@ document.addEventListener("DOMContentLoaded", function(event) {
  */
 
 function EditorViewController(mainController){
-    let inputFields = document.getElementsByClassName("editor__formgroup");
-    let currentNote = new Note();
+    this.currentNote = new Note();
 
     this.constructor = function(){
         //Event Listeners
         let self = this;
         document.getElementById("editor__closebutton").addEventListener('click', function (e) {
             self.show(false);
-        });
+        }); //Click on Close
         document.getElementById("editor__savebutton").addEventListener('click', function (e) {
             self.submit();
-        });
+        }); //Click on Save
+
+
+        let inputFields = document.getElementsByClassName("editor__formgroup");
+        for (let item of inputFields) {
+            let inputField = item.getElementsByClassName("editor__formgroup__input")[0];
+            let labelField = item.getElementsByClassName("editor__formgroup__label")[0];
+            if (inputField && labelField){
+                inputField.forLabel = labelField;
+                inputField.addEventListener('focus', this.onFocus.bind(this, labelField));
+                inputField.addEventListener('blur', this.onBlur.bind(this, labelField));
+            }
+        } // Focus and Blur events for Input Fields
+
+        let importanceListItemTemplate = document.getElementById("editor_listgroup__importanceselector__template").innerHTML;
+        Mustache.parse(importanceListItemTemplate);
+        let importanceListItems = "";
+        for(let i=0;i<5;i++){
+            let icon ={
+                index: i
+            };
+            importanceListItems += Mustache.render(importanceListItemTemplate,icon);
+        }
+        document.getElementById('editor__listgroup__importanceselector').innerHTML = importanceListItems;
+
         let editorImportanceIcons = document.getElementsByClassName("editor__listgroup__importanceselector_listitem");
         for (let icon of editorImportanceIcons) {
             let anchor = icon.getElementsByTagName("a")[0];
             anchor.addEventListener('mouseover', self.editorImportanceIconOver.bind(this));
             anchor.addEventListener('mouseout', self.editorImportanceIconOut.bind(this));
             anchor.addEventListener('click', self.editorImportanceIconClick.bind(this));
-        }
+        } //Click and Hover Importance Buttons
+
+        let picker = new MaterialDatetimePicker()
+            .on('submit', function(val) {
+                self.currentNote.date = val.valueOf();
+                self.updateDate();
+            });
+        document.querySelector('.editor__listgroup__dateselector_button').addEventListener('click', function(){
+            picker.open();
+        });
+
     };
 
-    let updateDate = function(n){
-        document.querySelector(".editor__listgroup__dateselector_value").innerHTML = moment(n).format('ll');
+    this.updateDate = function(){
+        document.querySelector(".editor__listgroup__dateselector_value").innerHTML = moment(this.currentNote.date).format('ll');
     };
-    this.show = function(state, elementId = null){
+
+    this.show = function(state, noteID = null){
         function HideElementById(selector){
             document.getElementById(selector).style.display = "none";
         }
@@ -39,17 +73,15 @@ function EditorViewController(mainController){
         if(state){
             HideElementById("list-wrapper");
             ShowElementById("editor-wrapper");
-            let currentNote = null;
             let self = this;
-            if(elementId){
-                mainController.notesStorage.getNoteById(elementId, function (note) {
-                    currentNote = note;
-                    self.setForm(currentNote);
+            if(noteID){
+                mainController.notesStorage.getNoteById(noteID, function (note) {
+                    self.setForm(note);
                 });
             } else {
-                currentNote = new Note();
-                currentNote.date = new Date().getTime();
-                self.setForm(currentNote);
+                let newNote = new Note();
+                newNote.date = new Date().getTime();
+                self.setForm(newNote);
             }
         } else {
             ShowElementById("list-wrapper");
@@ -60,32 +92,33 @@ function EditorViewController(mainController){
     this.submit = function(){
         let self = this;
         let form = document.forms.newNote;
-        currentNote.title = form.title.value;
-        currentNote.description = form.description.value;
-        if(currentNote._id == null){
-            mainController.notesStorage.addServerNote(currentNote, done);
+        let note = this.currentNote;
+        note.title = form.title.value;
+        note.description = form.description.value;
+        if(note._id == null){
+            mainController.notesStorage.addNote(note, done);
         } else {
-            mainController.notesStorage.updateServerNote(currentNote, done);
+            mainController.notesStorage.updateNote(note, done);
         }
         function done(){
             mainController.listView.update();
             self.show(false);
         }
     };
-    this.setForm = function(n){
+    this.setForm = function(note){
         let checkLabelClasses = function(label){
             if(label.value != "") label.forLabel.classList.add("editor__formgroup__label--small");
             else label.forLabel.classList.remove("editor__formgroup__label--small");
         };
-        currentNote = n;
+        this.currentNote = note;
         let form = document.forms.newNote;
-        form.title.value = n.title;
+        form.title.value = note.title;
         checkLabelClasses(form.title);
-        form.description.value = n.description;
+        form.description.value = note.description;
         checkLabelClasses(form.description);
 
-        updateDate(currentNote.date);
-        updateImportanceIcons(currentNote.importance);
+        this.updateDate();
+        this.updateImportanceIcons();
     };
     this.onFocus = function(label){
         label.classList.add("editor__formgroup__label--small");
@@ -96,30 +129,11 @@ function EditorViewController(mainController){
             label.classList.remove("editor__formgroup__label--small");
         }
     };
-    for (let item of inputFields) {
-        let inputField = item.getElementsByClassName("editor__formgroup__input")[0];
-        let labelField = item.getElementsByClassName("editor__formgroup__label")[0];
-        if (inputField && labelField){
-            inputField.forLabel = labelField;
-            inputField.addEventListener('focus', this.onFocus.bind(this, labelField));
-            inputField.addEventListener('blur', this.onBlur.bind(this, labelField));
-        }
-    }
 
-    let importanceListItemTemplate = document.getElementById("editor_listgroup__importanceselector__template").innerHTML;
-    Mustache.parse(importanceListItemTemplate);
-    let importanceListItems = "";
-    for(var i=0;i<5;i++){
-        let icon ={
-            index: i
-        };
-        importanceListItems += Mustache.render(importanceListItemTemplate,icon);
-    }
-    document.getElementById('editor__listgroup__importanceselector').innerHTML = importanceListItems;
-    let editorImportanceIcons = document.getElementsByClassName("editor__listgroup__importanceselector__icon");
-    let updateImportanceIcons = function(value = 1){
+    this.updateImportanceIcons = function(){
+        let editorImportanceIcons = document.getElementsByClassName("editor__listgroup__importanceselector__icon");
         for (let icon of editorImportanceIcons){
-            if(icon.dataset.index < value) {
+            if(icon.dataset.index < this.currentNote.importance) {
                 icon.classList.add("editor__listgroup__importanceselector__icon--active");
             } else {
                 icon.classList.remove("editor__listgroup__importanceselector__icon--active");
@@ -127,24 +141,16 @@ function EditorViewController(mainController){
         }
     };
     this.editorImportanceIconClick = function(e){
-        currentNote.importance = parseInt(e.target.dataset.index) + 1;
-        updateImportanceIcons(currentNote.importance);
+        this.currentNote.importance = parseInt(e.target.dataset.index) + 1;
+        this.updateImportanceIcons();
     };
     this.editorImportanceIconOver = function(e){
-        updateImportanceIcons(parseInt(e.target.dataset.index) + 1);
+        this.currentNote.importance = parseInt(e.target.dataset.index) + 1;
+        this.updateImportanceIcons();
     };
     this.editorImportanceIconOut = function(e){
-        updateImportanceIcons(currentNote.importance);
+        this.updateImportanceIcons();
     };
-
-    let picker = new MaterialDatetimePicker()
-    .on('submit', function(val) {
-        currentNote.date = val.valueOf();
-        updateDate(currentNote.date);
-    });
-    document.querySelector('.editor__listgroup__dateselector_button').addEventListener('click', function(){
-        picker.open();
-    });
     this.constructor();
 };/**
  * Created by Hedgehog on 16.05.18.
@@ -159,21 +165,21 @@ function ListViewController(mainController){
         let self = this;
         document.getElementById("list__container").addEventListener('click', function (e) {
             let type = e.target.type;
-            if(type == "submit") mainController.editorView.show(true, e.target.dataset.id);
-            if(type == "checkbox") self.activate(e.target.dataset.id, e.target);
+            if(type == "submit") mainController.editorView.show(true, e.target.dataset.id); //Click on Edit Button
+            if(type == "checkbox") self.activate(e.target.dataset.id, e.target); //Click on Checkbox
         });
         document.getElementById("list__fab").addEventListener('click', function (e) {
-            mainController.editorView.show(true);
+            mainController.editorView.show(true); //Click on Floating Action Button
         });
         document.getElementById("nav__showdone").addEventListener('change', function(e){
-            self.setActives(e.target.checked);
+            self.setActives(e.target.checked); //Click on ShowDone Button
         });
         document.getElementById('list-wrapper').addEventListener('change', function (e) {
             if(e.target.tagName.toLowerCase() === 'input' && e.target.type === 'radio') {
                 self.currentSort = e.target.value;
                 self.update();
             }
-        });
+        }); //Click on Sort Radio Buttons
         this.update();
     };
 
@@ -181,13 +187,12 @@ function ListViewController(mainController){
         document.getElementById("sort__"+this.currentSort).checked = true;
         let self = this;
         mainController.notesStorage.getNotes(this.currentSort, this.showDone, function (notes){
-            self.populateData(notes);
+           self.renderList(notes);
         });
-
     };
 
-    this.populateData = function(notes){
-        var output = "";
+    this.renderList = function(notes){
+        let output = "";
         let template = null;
         if(notes.length > 0){
             template = document.getElementById("list__item__template").innerHTML;
@@ -196,18 +201,17 @@ function ListViewController(mainController){
             Mustache.parse(template);
             Mustache.parse(importanceIconTemplate);
 
-            notes.forEach(function(elem, index){
-                // console.log(elem);
-                let itemData = Object.assign({}, elem);
-                itemData.dateFormatted = moment(elem.date).format('ll');
-                itemData.theme = mainController.theme.currentTheme;
-                itemData.importanceIcons = "";
-                itemData._id = elem._id;
-                itemData.checked = (elem.status === "DONE" ? true : false);
+            notes.forEach(function(note, index){
+                let itemTemplateData = Object.assign({}, note);
+                itemTemplateData.dateFormatted = moment(note.date).format('ll');
+                itemTemplateData.theme = mainController.theme.currentTheme;
+                itemTemplateData.importanceIcons = "";
+                itemTemplateData._id = note._id;
+                itemTemplateData.checked = (note.status === "DONE" ? true : false);
                 for(var i=0;i<5;i++){
-                    itemData.importanceIcons += Mustache.render(importanceIconTemplate, (i<itemData.importance ? {active: true} : {active: false}));
+                    itemTemplateData.importanceIcons += Mustache.render(importanceIconTemplate, (i<itemTemplateData.importance ? {active: true} : {active: false}));
                 }
-                output += Mustache.render(template, itemData);
+                output += Mustache.render(template, itemTemplateData);
             });
         } else {
             template = document.getElementById("list__nodata__template").innerHTML;
@@ -228,7 +232,7 @@ function ListViewController(mainController){
         let self = this;
         mainController.notesStorage.getNoteById(id, function (note) {
             note.status = checkbox.checked ? "DONE" : "UNDONE";
-            mainController.notesStorage.updateServerNote(note, function (){
+            mainController.notesStorage.updateNote(note, function (){
                 if(!self.showDone){
                     elem.classList.add("list__item--fadeout");
                     elem.style.height = "0px";
@@ -258,6 +262,7 @@ function MainViewController(){
         moment.locale(document.documentElement.lang);
         this.editorView.show(false);
 
+        /* Event Listener */
         let self = this;
         document.getElementById("nav__themeselector").addEventListener('change', function (e) {
             self.theme.onChange(e.target.value);
@@ -277,68 +282,57 @@ function Note(){
     this.status = "UNDONE";
 
     this.update = function(data){
-        if(data._id) this._id = data._id;
-        if(data.title) this.title = data.title;
-        if(data.description) this.description = data.description;
+        if(data._id) this._id = String(data._id);
+        if(data.title) this.title = String(data.title);
+        if(data.description) this.description = String(data.description);
         if(data.date) this.date = parseInt(moment(data.date).format("x"));
         if(data.created) this.created = parseInt(moment(data.created).format("x"));
-        if(data.importance) this.importance = data.importance;
+        if(data.importance) this.importance = parseInt(data.importance);
         if(data.status) this.status = data.status;
     };
 };/**
  * Created by Hedgehog on 17.05.18.
  */
 function NotesStorage(mainController){
-    this.localStorageKey = "remindeer";
-    this.notes = [];
-
     this.getNotes = function(sort = null, showActive = false, callback = function(){}){
-        this.getServerNotes(showActive, function(notes){
-            switch(sort) {
-                case "due": //by due
-                    notes.sort(((a,b) => a.date - b.date));
-                    break;
-                case "created": //by created
-                    notes.sort(((a,b) => b.created - a.created));
-                    break;
-                case "importance": //by importance
-                    notes.sort(((a,b) => b.importance - a.importance));
-                    break;
-                default:
-            }
-            this.notes = notes;
-            callback(this.notes);
-        });
-    };
-
-    this.getServerNotes = function(showActive, callback){
         let notes = [];
         fetch('/notes?showAll='+String(showActive)).then(function(response){
             return response.json();
         }).then(function(newNotes){
             newNotes.forEach(function(elem, index){
-                let n = new Note();
-                n.update(elem);
-                notes.push(n);
+                let newNote = new Note();
+                newNote.update(elem);
+                notes.push(newNote);
             });
+            switch(sort) {
+                case "due": //by due
+                    notes.sort(function(a,b) {return a.date - b.date;});
+                    break;
+                case "created": //by created
+                    notes.sort(function(a,b) {return b.created - a.created;});
+                    break;
+                case "importance": //by importance
+                    notes.sort(function(a,b) {return b.importance - a.importance;});
+                    break;
+                default:
+            }
             callback(notes);
         });
     };
-    this.addServerNote = function(note, callback){
+    this.addNote = function(note, callback){
         fetch('/notes', {method: "post", body: JSON.stringify(note),headers: {
                 'content-type': 'application/json'
             }}).then(function(response){
             callback();
         });
     };
-    this.updateServerNote = function( note, callback){
+    this.updateNote = function( note, callback){
         fetch('/notes/'+note._id, {method: "post", body: JSON.stringify(note),headers: {
                 'content-type': 'application/json'
             }}).then(function(response){
             callback();
         });
     };
-
     this.getNoteById = function(id, callback){
         fetch('/notes/'+id).then(function(response){
             return response.json();
@@ -348,25 +342,6 @@ function NotesStorage(mainController){
             callback(note);
         });
     };
-
-    this.updateLocalNote = function(note){
-        let data = this.getLocalNotes(true);
-        data.notes.forEach(function(elem, index){
-            if(elem.id == note.id){
-                data.notes[index] = note;
-            }
-        });
-        localStorage.setItem(this.localStorageKey, JSON.stringify(data));
-        return data;
-    };
-    this.addLocalNote = function(note){
-        let data = this.getLocalNotes(true);
-        note.id = data.notes.length+1;
-        data.notes.push(note);
-        localStorage.setItem(this.localStorageKey, JSON.stringify(data));
-        return data;
-    };
-
 };/**
  * Created by Hedgehog on 16.05.18.
  */
@@ -381,8 +356,7 @@ function Theme(mainController){
         let changeClassTheme = function(classContent){
             return classContent.replace("--"+oldTheme, "--"+newTheme);
         };
-        let allNodes = document.querySelectorAll('*');
-        allNodes.forEach(function(node) {
+        document.querySelectorAll('*').forEach(function(node) {
             let classContent = node.getAttribute("class");
             if(classContent){
                 node.setAttribute("class", changeClassTheme(classContent));

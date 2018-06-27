@@ -11,12 +11,12 @@ function Note(){
     this.status = "UNDONE";
 
     this.update = function(data){
-        if(data._id) this._id = data._id;
-        if(data.title) this.title = data.title;
-        if(data.description) this.description = data.description;
+        if(data._id) this._id = String(data._id);
+        if(data.title) this.title = String(data.title);
+        if(data.description) this.description = String(data.description);
         if(data.date) this.date = parseInt(moment(data.date).format("x"));
         if(data.created) this.created = parseInt(moment(data.created).format("x"));
-        if(data.importance) this.importance = data.importance;
+        if(data.importance) this.importance = parseInt(data.importance);
         if(data.status) this.status = data.status;
     };
 }
