@@ -15,7 +15,6 @@ function EditorViewController(mainController){
             self.submit();
         }); //Click on Save
 
-
         let inputFields = document.getElementsByClassName("editor__formgroup");
         for (let item of inputFields) {
             let inputField = item.getElementsByClassName("editor__formgroup__input")[0];
@@ -48,17 +47,13 @@ function EditorViewController(mainController){
 
         let picker = new MaterialDatetimePicker()
             .on('submit', function(val) {
-                this.currentNote.date = val.valueOf();
-                this.updateDate();
+                self.currentNote.date = val.valueOf();
+                self.updateDate();
             });
         document.querySelector('.editor__listgroup__dateselector_button').addEventListener('click', function(){
             picker.open();
         });
 
-    };
-
-    this.updateDate = function(){
-        document.querySelector(".editor__listgroup__dateselector_value").innerHTML = moment(this.currentNote.date).format('ll');
     };
 
     this.show = function(state, noteID = null){
@@ -117,6 +112,9 @@ function EditorViewController(mainController){
 
         this.updateDate();
         this.updateImportanceIcons();
+    };
+    this.updateDate = function(){
+        document.querySelector(".editor__listgroup__dateselector_value").innerHTML = moment(this.currentNote.date).format('ll');
     };
     this.onFocus = function(label){
         label.classList.add("editor__formgroup__label--small");

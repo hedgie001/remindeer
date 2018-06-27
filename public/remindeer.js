@@ -50,8 +50,8 @@ function EditorViewController(mainController){
 
         let picker = new MaterialDatetimePicker()
             .on('submit', function(val) {
-                this.currentNote.date = val.valueOf();
-                this.updateDate();
+                self.currentNote.date = val.valueOf();
+                self.updateDate();
             });
         document.querySelector('.editor__listgroup__dateselector_button').addEventListener('click', function(){
             picker.open();

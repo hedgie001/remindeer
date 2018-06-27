@@ -1,0 +1,3 @@
+{"title":"Erster Remindeer","description":"Hallo Welt","date":1530105106785,"created":{"$$date":1530105127861},"importance":4,"status":"UNDONE","_id":"CLZUVRrhksIdmbmx"}
+{"title":"Zweiter Reminder","description":"Test","date":1530105134160,"created":{"$$date":1530105160754},"importance":5,"status":"UNDONE","_id":"8TmUm8CjJ82uXJ8r"}
+{"title":"Zweiter Reminder","description":"Test","date":1530363600000,"created":{"$$date":1530105160754},"importance":3,"status":"UNDONE","_id":"8TmUm8CjJ82uXJ8r"}
