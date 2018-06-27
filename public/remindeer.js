@@ -40,13 +40,17 @@ function EditorViewController(mainController){
             HideElementById("list-wrapper");
             ShowElementById("editor-wrapper");
             let currentNote = null;
+            let self = this;
             if(elementId){
-                currentNote = mainController.notesStorage.getNoteById(elementId);
+                mainController.notesStorage.getNoteById(elementId, function (note) {
+                    currentNote = note;
+                    self.setForm(currentNote);
+                });
             } else {
                 currentNote = new Note();
                 currentNote.date = new Date().getTime();
+                self.setForm(currentNote);
             }
-            this.setForm(currentNote);
         } else {
             ShowElementById("list-wrapper");
             HideElementById("editor-wrapper");
@@ -54,16 +58,19 @@ function EditorViewController(mainController){
     };
 
     this.submit = function(){
+        let self = this;
         let form = document.forms.newNote;
         currentNote.title = form.title.value;
         currentNote.description = form.description.value;
-        if(currentNote.id == null){
-            mainController.notesStorage.addLocalNote(currentNote);
+        if(currentNote._id == null){
+            mainController.notesStorage.addServerNote(currentNote, done());
         } else {
-            mainController.notesStorage.updateLocalNote(currentNote);
+            mainController.notesStorage.updateServerNote(currentNote, done());
         }
-        mainController.listView.update();
-        this.show(false);
+        function done(){
+            mainController.listView.update();
+            self.show(false);
+        }
     };
     this.setForm = function(n){
         let checkLabelClasses = function(label){
@@ -172,7 +179,11 @@ function ListViewController(mainController){
 
     this.update = function(){
         document.getElementById("sort__"+this.currentSort).checked = true;
-        this.populateData(mainController.notesStorage.getNotes(this.currentSort, this.showDone));
+        let self = this;
+        mainController.notesStorage.getNotes(this.currentSort, this.showDone, function (notes){
+            self.populateData(notes);
+        });
+
     };
 
     this.populateData = function(notes){
@@ -186,10 +197,12 @@ function ListViewController(mainController){
             Mustache.parse(importanceIconTemplate);
 
             notes.forEach(function(elem, index){
+                console.log(elem);
                 let itemData = Object.assign({}, elem);
                 itemData.dateFormatted = moment(elem.date).format('ll');
                 itemData.theme = mainController.theme.currentTheme;
                 itemData.importanceIcons = "";
+                itemData._id = elem._id;
                 for(var i=0;i<5;i++){
                     itemData.importanceIcons += Mustache.render(importanceIconTemplate, (i<itemData.importance ? {active: true} : {active: false}));
                 }
@@ -253,22 +266,22 @@ function MainViewController(){
  * Created by Hedgehog on 16.05.18.
  */
 function Note(){
-    this.id = null;
+    this._id = null;
     this.title = "";
     this.description = "";
     this.date = null;
     this.created = new Date().getTime();
     this.importance = 1;
-    this.active = false;
+    this.status = "OK";
 
     this.update = function(data){
-        if(data.id) this.id = data.id;
+        if(data._id) this._id = data._id;
         if(data.title) this.title = data.title;
         if(data.description) this.description = data.description;
-        if(data.date) this.date = data.date;
-        if(data.created) this.created = data.created;
+        if(data.date) this.date = parseInt(moment(data.date).format("x"));
+        if(data.created) this.created = parseInt(moment(data.created).format("x"));
         if(data.importance) this.importance = data.importance;
-        if(data.active) this.active = data.active;
+        if(data.status) this.status = data.status;
     };
 };/**
  * Created by Hedgehog on 17.05.18.
@@ -277,60 +290,63 @@ function NotesStorage(mainController){
     this.localStorageKey = "remindeer";
     this.notes = [];
 
-    this.getNotes = function(sort = null, showActive = false){
-        //get data
-        let data = this.getLocalNotes(showActive);
-
-        //Check API Version, etc...
-
-        // sort
-        switch(sort) {
-            case "due": //by due
-                data.notes.sort(((a,b) => a.date - b.date));
-                break;
-            case "created": //by created
-                data.notes.sort(((a,b) => b.created - a.created));
-                break;
-            case "importance": //by importance
-                data.notes.sort(((a,b) => b.importance - a.importance));
-                break;
-            default:
-        }
-        this.notes = data.notes;
-        return this.notes;
-    };
-
-    this.getNoteById = function(id){
-        let note = null;
-        this.notes.forEach(function(elem, index){
-            if(elem.id == id) {
-                note = elem;
+    this.getNotes = function(sort = null, showActive = false, callback = function(){}){
+        this.getServerNotes(showActive, function(notes){
+            switch(sort) {
+                case "due": //by due
+                    notes.sort(((a,b) => a.date - b.date));
+                    break;
+                case "created": //by created
+                    notes.sort(((a,b) => b.created - a.created));
+                    break;
+                case "importance": //by importance
+                    notes.sort(((a,b) => b.importance - a.importance));
+                    break;
+                default:
             }
+            this.notes = notes;
+            callback(this.notes);
         });
-        return note;
     };
-    this.getLocalNotes = function(showActive = false){
-        let data = localStorage.getItem(this.localStorageKey);
-        if(data == null){
-            data = {
-                "api": "1.0.0",
-                "notes": []
-            };
-        } else {
-            data = JSON.parse(data);
-            let allNotes = [];
-            data.notes.forEach(function(elem, index){
+
+    this.getServerNotes = function(showActive, callback){
+        let notes = [];
+        fetch('/notes').then(function(response){
+            return response.json();
+        }).then(function(newNotes){
+            newNotes.forEach(function(elem, index){
                 let n = new Note();
                 n.update(elem);
-                if(showActive) allNotes.push(n);
-                else {
-                    if(n.active == false) allNotes.push(n);
-                }
+                notes.push(n);
             });
-            data.notes = allNotes;
-        }
-        return data;
+            callback(notes);
+        });
     };
+    this.addServerNote = function(note, callback){
+        fetch('/notes', {method: "post", body: JSON.stringify(note),headers: {
+                'content-type': 'application/json'
+            }}).then(function(response){
+            callback();
+        });
+    };
+    this.updateServerNote = function( note, callback){
+        fetch('/notes/'+note._id, {method: "post", body: JSON.stringify(note),headers: {
+                'content-type': 'application/json'
+            }}).then(function(response){
+            callback();
+        });
+    };
+
+    this.getNoteById = function(id, callback){
+        fetch('/notes/'+id).then(function(response){
+            return response.json();
+        }).then(function(data){
+            let note = new Note();
+            note.update(data);
+            callback(note);
+        });
+    };
+
     this.updateLocalNote = function(note){
         let data = this.getLocalNotes(true);
         data.notes.forEach(function(elem, index){
@@ -348,6 +364,7 @@ function NotesStorage(mainController){
         localStorage.setItem(this.localStorageKey, JSON.stringify(data));
         return data;
     };
+
 };/**
  * Created by Hedgehog on 16.05.18.
  */

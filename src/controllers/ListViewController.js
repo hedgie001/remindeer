@@ -31,7 +31,11 @@ function ListViewController(mainController){
 
     this.update = function(){
         document.getElementById("sort__"+this.currentSort).checked = true;
-        this.populateData(mainController.notesStorage.getNotes(this.currentSort, this.showDone));
+        let self = this;
+        mainController.notesStorage.getNotes(this.currentSort, this.showDone, function (notes){
+            self.populateData(notes);
+        });
+
     };
 
     this.populateData = function(notes){
@@ -45,10 +49,12 @@ function ListViewController(mainController){
             Mustache.parse(importanceIconTemplate);
 
             notes.forEach(function(elem, index){
+                console.log(elem);
                 let itemData = Object.assign({}, elem);
                 itemData.dateFormatted = moment(elem.date).format('ll');
                 itemData.theme = mainController.theme.currentTheme;
                 itemData.importanceIcons = "";
+                itemData._id = elem._id;
                 for(var i=0;i<5;i++){
                     itemData.importanceIcons += Mustache.render(importanceIconTemplate, (i<itemData.importance ? {active: true} : {active: false}));
                 }

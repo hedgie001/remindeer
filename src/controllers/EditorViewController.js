@@ -38,13 +38,17 @@ function EditorViewController(mainController){
             HideElementById("list-wrapper");
             ShowElementById("editor-wrapper");
             let currentNote = null;
+            let self = this;
             if(elementId){
-                currentNote = mainController.notesStorage.getNoteById(elementId);
+                mainController.notesStorage.getNoteById(elementId, function (note) {
+                    currentNote = note;
+                    self.setForm(currentNote);
+                });
             } else {
                 currentNote = new Note();
                 currentNote.date = new Date().getTime();
+                self.setForm(currentNote);
             }
-            this.setForm(currentNote);
         } else {
             ShowElementById("list-wrapper");
             HideElementById("editor-wrapper");
@@ -52,16 +56,19 @@ function EditorViewController(mainController){
     };
 
     this.submit = function(){
+        let self = this;
         let form = document.forms.newNote;
         currentNote.title = form.title.value;
         currentNote.description = form.description.value;
-        if(currentNote.id == null){
-            mainController.notesStorage.addLocalNote(currentNote);
+        if(currentNote._id == null){
+            mainController.notesStorage.addServerNote(currentNote, done());
         } else {
-            mainController.notesStorage.updateLocalNote(currentNote);
+            mainController.notesStorage.updateServerNote(currentNote, done());
         }
-        mainController.listView.update();
-        this.show(false);
+        function done(){
+            mainController.listView.update();
+            self.show(false);
+        }
     };
     this.setForm = function(n){
         let checkLabelClasses = function(label){

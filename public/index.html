@@ -54,10 +54,10 @@
                 <div class="list">
 
                     <script id="list__item__template" type="x-tmpl-mustache">
-                        <div class="list__item list__item--{{theme}}" id="list__item__id__{{id}}" data-id="{{id}}">
+                        <div class="list__item list__item--{{theme}}" id="list__item__id__{{_id}}" data-id="{{_id}}">
                             <div class="list__item__checkbox">
                                 <label class="list__item__checkbox__label">
-                                    <input type="checkbox" class="list__item__checkbox__input" data-id="{{id}}" {{#active}}checked{{/active}}>
+                                    <input type="checkbox" class="list__item__checkbox__input" data-id="{{_id}}" {{#active}}checked{{/active}}>
                                     <i class="list__item__checkbox__icon material-icons"></i>
                                 </label>
                             </div>
@@ -70,7 +70,7 @@
                                 <p>{{description}}</p>
                             </div>
                             <div class="list__item__edit">
-                                <button class="list__item__edit_button--{{theme}}" type="submit" data-id='{{id}}'>Edit</button>
+                                <button class="list__item__edit_button--{{theme}}" type="submit" data-id='{{_id}}'>Edit</button>
                             </div>
                             <div class="list__item__overlay">
                                 <img class="list__item__overlay_spinner" src="img/spinner.svg" alt="loading..."/>
