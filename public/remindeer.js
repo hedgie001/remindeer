@@ -17,7 +17,6 @@ function EditorViewController(mainController){
             self.submit();
         }); //Click on Save
 
-
         let inputFields = document.getElementsByClassName("editor__formgroup");
         for (let item of inputFields) {
             let inputField = item.getElementsByClassName("editor__formgroup__input")[0];
@@ -57,10 +56,6 @@ function EditorViewController(mainController){
             picker.open();
         });
 
-    };
-
-    this.updateDate = function(){
-        document.querySelector(".editor__listgroup__dateselector_value").innerHTML = moment(this.currentNote.date).format('ll');
     };
 
     this.show = function(state, noteID = null){
@@ -119,6 +114,9 @@ function EditorViewController(mainController){
 
         this.updateDate();
         this.updateImportanceIcons();
+    };
+    this.updateDate = function(){
+        document.querySelector(".editor__listgroup__dateselector_value").innerHTML = moment(this.currentNote.date).format('ll');
     };
     this.onFocus = function(label){
         label.classList.add("editor__formgroup__label--small");
@@ -258,10 +256,16 @@ function MainViewController(){
     this.listView = new ListViewController(this);
     this.editorView = new EditorViewController(this);
 
+    const visitKey = "remindeerVisit";
+    this.tutorial = new TutorialController(visitKey);
+
     this.constructor = function(){
+        if(localStorage.getItem(visitKey) != null) this.tutorial.hide();
+
         moment.locale(document.documentElement.lang);
         this.editorView.show(false);
 
+        //
         /* Event Listener */
         let self = this;
         document.getElementById("nav__themeselector").addEventListener('change', function (e) {
@@ -269,6 +273,23 @@ function MainViewController(){
         });
     };
     this.constructor();
+};function TutorialController(key){
+
+    this.constructor = function(key){
+        /* Event Listener */
+        let self = this;
+        document.getElementById("tutorial__button").addEventListener('click', function (e) {
+            localStorage.setItem(key, "true");
+            self.hide();
+        });
+    };
+    this.hide = function(){
+        document.getElementsByClassName("tutorial")[0].style.display = "none";
+    };
+    this.show = function(){
+        document.getElementsByClassName("tutorial")[0].style.display = "block";
+    };
+    this.constructor(key);
 };/**
  * Created by Hedgehog on 16.05.18.
  */

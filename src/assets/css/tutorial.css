@@ -1,0 +1,47 @@
+.tutorial{
+    position: fixed;
+    z-index: 10;
+    background: rgba(0,0,0,0.6);
+    color: white;
+    width: 100%;
+    height: 100%;
+}
+.tutorial__sort{
+    width: 300px;
+    left: calc(50% - 440px);
+    top: 180px;
+    position: absolute;
+}
+.tutorial__create{
+    position: absolute;
+    right: 50px;
+    bottom: 70px;
+    width: 300px;
+}
+.tutorial__showall{
+    position: absolute;
+    width: 360px;
+    right: 196px;
+    top: 2px;
+}
+.tutorial__theme{
+    position: absolute;
+    right: 26px;
+    height: 160px;
+    top: 37px;
+}
+.tutorial__button{
+    position: absolute;
+    width: 140px;
+    left: calc(50% - 70px);
+    top: calc(50% - 19px);
+    font-size: 2em;
+    min-height: 60px;
+    background: #fbc02d;
+    color: white;
+    opacity: 1;
+}
+.tutorial__button:hover{
+    background: white;
+    color: #000;
+}
